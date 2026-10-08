@@ -2,8 +2,8 @@
 
 ## Miembros del grupo LX-XXX-X (sustituir)
 
-1. Apellidos, Nombre
-1. Apellidos, Nombre
+1. Rodríguez Gallego, Eloy
+1. Robles Pérez, Javier
 1. Apellidos, Nombre
 1. Apellidos, Nombre
 
