@@ -2,14 +2,41 @@
 
 ## Miembros del grupo LX-XXX-X (sustituir)
 
+1. Robles Pérez, Javier 
 1. Rodríguez Gallego, Eloy
-1. Robles Pérez, Javier
-1. Apellidos, Nombre
-1. Apellidos, Nombre
+1. Martínez Adega, Nicolás
+1. García Martínez, Daniel
 
 ## 1. Introducción al problema
 
-- Descripción del problema para poner en contexto el proyecto, incluyendo información sobre los clientes y usuarios, la situación actual, problemas, expectativas, etc. Se valorará la presencia de información multimedia (fotos, gráficos, documentos escaneados, etc.).
+- EquipaUS sustituye el cuaderno de papel y la hoja de cálculo con los que hoy se prestan portátiles, cámaras, gafas de realidad virtual y kits de electrónica en la Escuela, por un sistema que sabe en todo momento qué unidad tiene cada persona y hasta cuándo.
+
+## 1.1. Cliente y usuarios
+• Cliente: el Servicio de Préstamo de Material Técnico de la Escuela (técnicos de laboratorio y conserjería), responsable de un inventario de unos 300 equipos cuyo valor supera con holgura los 150.000 €.
+• Usuarios: la comunidad universitaria: estudiantes de grado y máster (los más numerosos, sobre todo en épocas de TFG/TFM), Personal Docente e Investigador (PDI) y Personal Técnico, de Gestión y de Administración y Servicios (PTGAS).
+
+
+## 1.2. Situación actual
+-El préstamo funciona así: el estudiante se acerca al mostrador, el técnico mira una hoja de Excel compartida para ver si queda alguna unidad libre, apunta a mano en un cuaderno el nombre, el DNI, el equipo y la fecha prevista de devolución, y entrega el material. Las reservas para días posteriores se piden por correo electrónico y se anotan, si se recuerda, en la misma hoja.
+
+## 1.3. Problemas detectados
+
+|           Problema               |                           Ejemplo real del día a día                          |
+|----------------------------------|--------------------------------------------------------------------------------
+| Sin trazabilidad                 | Nadie sabe quién tuvo la cámara que apareció con la lente rayada              |
+| Dobles reservas                  | Dos grupos cuentan con el mismo proyector para su defensa de TFG el mismo día |
+| Retrasos sin consecuencia        | Un portátil se devuelve con tres semanas de retraso                           |
+| Equipos averiados en circulación | Se vuelve a prestar unas gafas VR con el cable roto                           |
+| Cero datos para decidir          | No se sabe qué equipos tienen lista de espera                                 |
+
+|               Consecuencia                  |
+|---------------------------------------------|
+| Material dañado o «perdido» sin responsable |
+| Conflictos y defensas retrasadas            |
+| Otros estudiantes se quedan sin equipo      |
+| Mala imagen del servicio y más averías      |
+| Se compra material que nadie pide           |
+
 
 ## 2. Glosario de términos
 
