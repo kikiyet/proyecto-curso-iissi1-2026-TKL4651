@@ -87,7 +87,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como solicitante quiero indicar un modelo y un periodo de fechas y ver cuántas unidades están libres en ese periodo, para saber si puedo reservarlo antes de planificar mi práctica o mi grabación.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 • Si el periodo coincide aunque sea parcialmente con una reserva o préstamo de una unidad, esa unidad no se cuenta como libre. Se debe aplicar la regla de negocio RN05.
 • Las unidades no prestables nunca se cuentan como libres. Se debe aplicar la regla de negocio RN06.
 • Si el periodo supera la duración máxima del solicitante o empieza con más de 14 días de antelación, se muestra un aviso en lugar del resultado. Se deben aplicar las reglas de negocio RN02 y RN08.
@@ -96,7 +96,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como solicitante quiero ver mis reservas pendientes y mis préstamos en curso con su fecha límite, para no olvidar ninguna recogida ni devolución.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 • Se listan ordenados por fecha límite (o fecha de recogida, en reservas) de la más próxima a la más lejana.
 • Los préstamos cuya fecha límite ya ha pasado aparecen marcados como «Vencido» con los días de retraso.
 • Se muestra cuántos préstamos activos lleva frente a su máximo permitido (p. ej. «1 de 2»). Se debe aplicar la regla de negocio RN01.
@@ -106,7 +106,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como solicitante quiero consultar todos los préstamos que he tenido, para saber qué equipos he usado y si alguno se devolvió con retraso o con daños.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • Se listan del más reciente al más antiguo, con modelo, fechas de inicio, límite y devolución real.
 • Los préstamos devueltos tarde muestran los días de retraso y los que tuvieron incidencia muestran su gravedad.
@@ -116,7 +116,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como solicitante quiero saber si estoy penalizado, por qué y hasta cuándo, para entender por qué no puedo reservar y cuándo podré volver a hacerlo.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • Si hay una penalización activa se muestra su motivo, el préstamo o la incidencia que la originó y la fecha de fin. Se debe aplicar la regla de negocio RN03.
 • Los días de penalización mostrados coinciden con el cálculo de la regla correspondiente. Se deben aplicar las reglas de negocio RN04, RN07 y RN09.
@@ -125,7 +125,7 @@ El sistema debe cubrir cinco áreas:
 #### RF06. Listar préstamos vencidos
 • Como técnico quiero un listado de los préstamos no devueltos cuya fecha límite ya ha pasado, para reclamar el material a quien lo tiene.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 
 • Solo aparecen préstamos sin fecha de devolución real y con fecha límite anterior al momento actual.
@@ -136,7 +136,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como técnico quiero ver las reservas que se recogen hoy y los préstamos que vencen hoy, para tener preparado el material y saber qué devoluciones esperar.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • Aparecen en dos bloques (recogidas y devoluciones) ordenados por hora.
 • Las reservas que han superado su margen de recogida se marcan como «Caducada». Se debe aplicar la regla de negocio RN09.
@@ -145,7 +145,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como técnico quiero consultar, escaneando su código de inventario, todos los préstamos e incidencias de un artículo, para saber quién lo tenía cuando se estropeó.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • Se muestra el estado actual del artículo y, en orden cronológico inverso, todos sus préstamos (con solicitante y técnicos de entrega y recogida) y todas sus incidencias.
 • Si el código no existe se muestra «Artículo no encontrado».
@@ -154,7 +154,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como técnico quiero listar los artículos En revisión o En reparación con la incidencia que los retiró, para hacer seguimiento de las reparaciones pendientes.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • Solo aparecen artículos en esos dos estados, ordenados por antigüedad de la incidencia.
 • Cada fila muestra la gravedad y el coste estimado de reparación. Se deben aplicar las reglas de negocio RN06 y RN07.
@@ -163,7 +163,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como responsable del servicio quiero ver los solicitantes con una penalización activa, para revisar casos y atender reclamaciones.
                   
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • Solo aparecen penalizaciones cuya fecha de fin es posterior al momento actual. Se debe aplicar la regla de negocio RN03.
 • Se puede filtrar por motivo (retraso, incidencia grave, reservas no recogidas).
@@ -172,7 +172,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como responsable del servicio quiero ver los 10 modelos con más préstamos del curso académico actual y su porcentaje de ocupación, para justificar la compra de nuevas unidades.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • El curso académico se considera del 1 de septiembre al 31 de agosto.
 • Los préstamos se cuentan por modelo, sumando todas sus unidades; las reservas caducadas o canceladas no cuentan.
@@ -181,7 +181,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como responsable del servicio quiero un resumen del número de artículos de cada categoría en cada estado y su valor de compra total, para conocer el estado real del parque tecnológico.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 • La suma de todas las celdas coincide con el total de artículos registrados.
 • Los artículos De baja aparecen en su propia columna y no suman al valor del inventario activo.
 
@@ -191,7 +191,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como responsable del servicio quiero almacenar el UVUS, DNI/NIE, nombre, apellidos, correo institucional, teléfono, tipo de usuario (estudiante, PDI, PTGAS, técnico o responsable) y fecha de alta de cada usuario, para identificar a quién se presta cada equipo y poder contactarle.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • No se puede dar de alta un usuario con un UVUS o un DNI/NIE ya registrado.
 • El DNI/NIE debe tener formato válido (8 cifras y letra, o X/Y/Z + 7 cifras + letra).
@@ -202,7 +202,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como responsable del servicio quiero almacenar las categorías (nombre y descripción) y, para cada modelo, su marca, nombre comercial, descripción, especificaciones técnicas, fotografía y categoría, para mostrar un catálogo claro a los solicitantes.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • No pueden existir dos categorías con el mismo nombre ni dos modelos con la misma marca y nombre comercial.
 • Todo modelo pertenece obligatoriamente a una única categoría.
@@ -212,7 +212,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como técnico quiero almacenar de cada unidad física su código de inventario, número de serie, modelo, fecha de adquisición, precio de compra, ubicación (laboratorio o armario) y estado, para saber exactamente qué equipo es y dónde está.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • El código de inventario y el número de serie son únicos.
 • La fecha de adquisición no puede ser posterior a la fecha actual y el precio de compra debe ser mayor que 0.
@@ -223,7 +223,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como solicitante quiero que se guarde de cada reserva quién la hace, qué artículo, cuándo se creó, la fecha y hora previstas de recogida y de devolución, y su estado (Pendiente, Recogida, Cancelada o Caducada), para asegurarme el material que necesito en una fecha concreta.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • La fecha de recogida no puede ser anterior a la fecha de creación de la reserva.
 • La fecha prevista de devolución debe ser posterior a la de recogida.
@@ -233,7 +233,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como técnico quiero almacenar de cada préstamo el solicitante, el artículo, la reserva de la que procede (si la hay), el técnico que lo entrega, la fecha y hora de inicio, la fecha límite de devolución, la fecha y hora de devolución real, el técnico que lo recoge y el estado en que vuelve el material (Correcto o Con daños), para tener la trazabilidad completa de cada equipo.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • La fecha límite debe ser posterior a la fecha de inicio.
 • La fecha de devolución real, si existe, no puede ser anterior a la de inicio.
@@ -244,7 +244,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como técnico quiero almacenar de cada incidencia el artículo afectado, el préstamo en que se detectó (si lo hay), el técnico que la registra, la fecha, una descripción, una foto opcional del daño, la gravedad (Leve, Grave o Pérdida), el coste estimado de reparación y su estado (Abierta, En reparación, Resuelta o Baja definitiva), para controlar las averías y saber quién es responsable.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 
 • La gravedad y el estado solo admiten los valores indicados.
 • El coste estimado, si se indica, debe ser mayor o igual que 0.
@@ -254,7 +254,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como responsable del servicio quiero almacenar de cada penalización el solicitante, el motivo (Retraso, Incidencia grave o Reservas no recogidas), el préstamo o la incidencia que la originó, la fecha de inicio, la fecha de fin y si fue levantada manualmente y por quién, para aplicar las sanciones de forma justa y poder revisarlas.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 • La fecha de fin debe ser posterior a la de inicio.
 • Toda penalización por Retraso o por Incidencia grave debe estar asociada al préstamo o la incidencia que la causó.
 • Solo un usuario de tipo responsable puede figurar como quien levanta una penalización.
