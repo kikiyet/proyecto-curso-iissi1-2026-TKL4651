@@ -100,6 +100,13 @@ Descripción de la regla de negocio.
 ### 4.2. Mapa de historias de usuario (opcional)
 
 ### 4.3. Requisitos no funcionales (opcional)
+### Requisitos No Funcionales (RNF)
+
+* **RNF01. Integridad ante accesos simultáneos:** Como solicitante quiero que, si otra persona reserva la misma unidad en el mismo instante, solo una de las dos reservas se confirme, para no presentarme en el mostrador y encontrarme sin equipo (soporta RN05).
+* **RNF02. Tiempo de respuesta:** Como solicitante quiero que el catálogo y la disponibilidad (RF01, RF02) se muestren en menos de 2 segundos, para poder consultarlos desde el móvil entre clases.
+* **RNF03. Protección de datos personales:** Como responsable del servicio quiero que los datos personales (DNI, teléfono) solo sean visibles para el personal del servicio y se traten conforme al RGPD, para cumplir la normativa de la universidad.
+* **RNF04. Acceso con la cuenta universitaria:** Como usuario quiero iniciar sesión con mi UVUS, sin crear otra contraseña, para no tener que recordar una cuenta más.
+* **RNF05. Uso desde el móvil:** Como solicitante quiero que la aplicación se adapte a la pantalla del móvil, para poder reservar desde cualquier sitio.
 
 **R.N.F. 01. Título requisito no funcional**
 Como [tipo de usuario]
