@@ -78,7 +78,7 @@ El sistema debe cubrir cinco áreas:
 
 • Como solicitante quiero ver todos los modelos del catálogo agrupados por categoría, con su foto, descripción y número de unidades disponibles, para saber rápidamente qué material puedo pedir.
 
-# Prueba de aceptación
+#### Prueba de aceptación
 • Los modelos aparecen agrupados por categoría y, dentro de cada una, ordenados alfabéticamente por marca y nombre.
 • No aparecen modelos cuyas unidades estén todas De baja.
 • El número de unidades disponibles no cuenta las que están En revisión, En reparación o De baja. Se debe aplicar la regla de negocio RN06.
