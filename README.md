@@ -52,21 +52,35 @@
 
 ### 3.1. Requisitos generales
 El sistema debe cubrir cinco áreas:
-1. Gestión de usuarios: registro de solicitantes y personal del servicio, con su rol y su situación (activo o penalizado).
-2. Catálogo e inventario: alta, modificación y baja de modelos y de cada artículo físico, con su estado en todo momento.
-3. Reservas y préstamos: reservar con antelación, convertir la reserva en préstamo al recoger el material y registrar la devolución, garantizando que una unidad nunca se asigna dos veces en el mismo periodo.
-4. Incidencias y penalizaciones: registrar daños y pérdidas, retirar de circulación los equipos afectados y sancionar automáticamente retrasos e incidencias graves.
-5. Consultas y estadísticas: listados para el día a día (préstamos vencidos, equipos en reparación) y datos de uso para la toma de decisiones.
+
+**1. Gestión de usuarios:**
+El mantenimiento de un registro de los solicitantes y el personal del servicio, con su rol y su
+situación (activo o penalizado).
+
+**2. Catálogo e inventario:**
+Si el modelo o el artículo está en alta (disponible), en modificación o en baja,
+con su estado en todo momento.
+
+**3. Reservas y préstamos:**
+La posibilidad de reservar con antelación, convertir la reserva en préstamo al
+recoger el material y registrar la devolución, garantizando que una unidad nunca se
+asigne dos veces en el mismo periodo.
+
+**4. Incidencias y penalizaciones:**
+El registro de daños y pérdidas, retirar de circulación los
+equipos afectados y sancionar automáticamente retrasos e incidencias graves.
+
+**5. Consultas y estadísticas:**
+La creación de listados para el día a día (ya sean préstamos vencidos, equipos en
+reparación...) y datos de uso para la toma de decisiones.
 
 ### 3.2. Usuarios del sistema
-
-| Usuario | Quién es | Qué hace en el sistema |
-| :--- | :--- | :--- |
+| Usuario | Quién es | Qué hace |
+| --- | --- | --- |
 | **Solicitante – Estudiante** | Alumnado de grado y máster | Consulta el catálogo, reserva, ve sus préstamos, su historial y sus penalizaciones. |
 | **Solicitante – Personal (PDI / PTGAS)** | Profesorado y personal de la universidad | Lo mismo que el estudiante, con un periodo de préstamo más largo y más préstamos simultáneos (ver RN01 y RN02). |
 | **Técnico** | Personal del mostrador y de los laboratorios | Entrega y recoge material, registra incidencias, cambia el estado de los artículos y consulta préstamos vencidos. |
 | **Responsable del servicio** | Coordinador/a del servicio | Gestiona el catálogo y el inventario, levanta penalizaciones y consulta las estadísticas de uso. |
-
 
 ## 4. Catálogo de requisitos
 
