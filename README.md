@@ -51,7 +51,14 @@ El sistema debe cubrir cinco áreas:
 3. Reservas y préstamos: reservar con antelación, convertir la reserva en préstamo al recoger el material y registrar la devolución, garantizando que una unidad nunca se asigna dos veces en el mismo periodo.
 4. Incidencias y penalizaciones: registrar daños y pérdidas, retirar de circulación los equipos afectados y sancionar automáticamente retrasos e incidencias graves.
 5. Consultas y estadísticas: listados para el día a día (préstamos vencidos, equipos en reparación) y datos de uso para la toma de decisiones.
+
 ### 3.2. Usuarios del sistema
+
+| USUARIO | QUIÉN ES | QUÉ HACE EL SISTEMA |
+|------------------------------------------|
+|*Solicitante-Estudiante*| Alumnado de grado y máster| Consulta el catálogo, reserva, ve sus préstamos, su historial y sus penalizaciones.|
+
+
 
 ## 4. Catálogo de requisitos
 
