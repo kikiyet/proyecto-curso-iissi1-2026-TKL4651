@@ -63,6 +63,7 @@
 | **Reserva** | Solicitud confirmada para recoger un artículo en una fecha futura. Si se recoge, se convierte en préstamo; si no, caduca. |
 | **Solicitante** | Usuario que pide material: estudiante, PDI o PTGAS. |
 | **Técnico** | Personal del servicio que gestiona el catálogo, entrega y recoge el material y resuelve incidencias. |
+| **UVUS** | Usuario Virtual de la Universidad de Sevilla: identificador único con el que cada miembro de la comunidad inicia sesión. |
 ## 3. Visión general del sistema
 
 ### 3.1. Requisitos generales
