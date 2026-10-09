@@ -54,10 +54,12 @@ El sistema debe cubrir cinco áreas:
 
 ### 3.2. Usuarios del sistema
 
-| USUARIO | QUIÉN ES | QUÉ HACE EL SISTEMA |
-|------------------------------------------|
-|*Solicitante-Estudiante*| Alumnado de grado y máster| Consulta el catálogo, reserva, ve sus préstamos, su historial y sus penalizaciones.|
-
+| Usuario | Quién es | Qué hace en el sistema |
+| :--- | :--- | :--- |
+| **Solicitante – Estudiante** | Alumnado de grado y máster | Consulta el catálogo, reserva, ve sus préstamos, su historial y sus penalizaciones. |
+| **Solicitante – Personal (PDI / PTGAS)** | Profesorado y personal de la universidad | Lo mismo que el estudiante, con un periodo de préstamo más largo y más préstamos simultáneos (ver RN01 y RN02). |
+| **Técnico** | Personal del mostrador y de los laboratorios | Entrega y recoge material, registra incidencias, cambia el estado de los artículos y consulta préstamos vencidos. |
+| **Responsable del servicio** | Coordinador/a del servicio | Gestiona el catálogo y el inventario, levanta penalizaciones y consulta las estadísticas de uso. |
 
 
 ## 4. Catálogo de requisitos
