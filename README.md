@@ -45,7 +45,12 @@
 ## 3. Visión general del sistema
 
 ### 3.1. Requisitos generales
-
+El sistema debe cubrir cinco áreas:
+1. Gestión de usuarios: registro de solicitantes y personal del servicio, con su rol y su situación (activo o penalizado).
+2. Catálogo e inventario: alta, modificación y baja de modelos y de cada artículo físico, con su estado en todo momento.
+3. Reservas y préstamos: reservar con antelación, convertir la reserva en préstamo al recoger el material y registrar la devolución, garantizando que una unidad nunca se asigna dos veces en el mismo periodo.
+4. Incidencias y penalizaciones: registrar daños y pérdidas, retirar de circulación los equipos afectados y sancionar automáticamente retrasos e incidencias graves.
+5. Consultas y estadísticas: listados para el día a día (préstamos vencidos, equipos en reparación) y datos de uso para la toma de decisiones.
 ### 3.2. Usuarios del sistema
 
 ## 4. Catálogo de requisitos
