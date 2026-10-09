@@ -108,37 +108,6 @@ Toda devolución pasa por revisión antes de volver a **Disponible**; una incide
 
 ## 3. Visión general del sistema
 
-### Un artículo solo vuelve a prestarse después de pasar la revisión
-
-```mermaid
-flowchart LR
-    Disponible("Disponible")
-    Prestado("Prestado")
-    Revision("En revisión")
-    Reparacion("En reparación")
-    Baja("De baja")
-
-    Disponible -->|entrega| Prestado
-    Prestado -->|"devolución (RN06)"| Revision
-    Revision -->|"revisión correcta"| Disponible
-    Revision -->|"incidencia grave (RN07)"| Reparacion
-    Prestado -->|"pérdida (RN07)"| Baja
-    Reparacion -->|irreparable| Baja
-    Reparacion -->|reparado| Disponible
-
-    style Disponible fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px
-    style Baja fill:#fce8e6,stroke:#d93025,stroke-width:2px
-    style Prestado fill:#ffffff,stroke:#cccccc,stroke-width:1.5px
-    style Revision fill:#ffffff,stroke:#cccccc,stroke-width:1.5px
-    style Reparacion fill:#ffffff,stroke:#cccccc,stroke-width:1.5px
-```
-
-<sub>ciclo de vida de un artículo · 5 estados</sub>
-
-> Toda devolución pasa por revisión antes de volver a Disponible; una incidencia grave lo manda a reparación y una pérdida lo da de baja.
-
-
-
 ### 3.1. Requisitos generales
 El sistema debe cubrir cinco áreas:
 
