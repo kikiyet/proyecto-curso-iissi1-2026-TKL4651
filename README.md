@@ -45,9 +45,24 @@
 • Que el responsable del servicio disponga de estadísticas de uso para justificar compras y bajas.
 
 ## 2. Glosario de términos
-
-- Términos específicos del dominio del problema, ordenados alfabéticamente. Se valorará la presencia de información multimedia.
-
+| Término | Definición |
+| :--- | :--- |
+| **Artículo** | Unidad física concreta de un modelo, identificada por su número de serie y su código de inventario (p. ej. «Portátil Dell XPS 15, SN7H2K9Q»). Es lo que realmente se presta. |
+| **Catálogo** | Conjunto de todos los modelos que el servicio ofrece, organizados por categorías. |
+| **Categoría** | Agrupación temática de modelos: Informática, Audiovisual, Realidad Virtual, Electrónica y Robótica, Accesorios. |
+| **Código de inventario** | Etiqueta con código de barras pegada en cada artículo; permite identificarlo al escanearlo en el mostrador. |
+| **Devolución** | Momento en que el artículo vuelve al mostrador; el técnico registra la fecha real y el estado en que llega. |
+| **Estado del artículo** | Situación de una unidad en el sistema: Disponible, Prestado, En revisión, En reparación o De baja (ver diagrama). Las reservas no cambian el estado: se controlan por fechas (RN05). |
+| **Fecha límite de devolución** | Fecha y hora máximas en que el artículo debe devolverse; se calcula al crear el préstamo. |
+| **Incidencia** | Registro de un daño, avería o pérdida detectado en un artículo, con su gravedad (leve, grave, pérdida). |
+| **Modelo** | Tipo de equipo con marca, nombre comercial y características comunes (p. ej. «Meta Quest 3»). Un modelo tiene uno o varios artículos. |
+| **PDI** | Personal Docente e Investigador de la universidad. |
+| **Penalización** | Bloqueo temporal que impide a un solicitante reservar o recibir préstamos, generado por un retraso o una incidencia grave. |
+| **Préstamo** | Entrega efectiva de un artículo a un solicitante durante un periodo con fecha de inicio y fecha límite. |
+| **PTGAS** | Personal Técnico, de Gestión y de Administración y Servicios de la universidad. |
+| **Reserva** | Solicitud confirmada para recoger un artículo en una fecha futura. Si se recoge, se convierte en préstamo; si no, caduca. |
+| **Solicitante** | Usuario que pide material: estudiante, PDI o PTGAS. |
+| **Técnico** | Personal del servicio que gestiona el catálogo, entrega y recoge el material y resuelve incidencias. |
 ## 3. Visión general del sistema
 
 ### 3.1. Requisitos generales
