@@ -96,16 +96,6 @@ stateDiagram-v2
 
 Toda devolución pasa por revisión antes de volver a **Disponible**; una incidencia grave lo manda a **reparación** y una pérdida lo da de **baja**.
 
-| Desde | Hacia | Evento | Regla |
-|---|---|---|---|
-| Disponible | Prestado | entrega | — |
-| Prestado | En revisión | devolución | RN06 |
-| Prestado | De baja | pérdida | RN07 |
-| En revisión | Disponible | revisión correcta | — |
-| En revisión | En reparación | incidencia grave | RN07 |
-| En reparación | Disponible | reparado | — |
-| En reparación | De baja | irreparable | — |
-
 ## 3. Visión general del sistema
 
 ### 3.1. Requisitos generales
