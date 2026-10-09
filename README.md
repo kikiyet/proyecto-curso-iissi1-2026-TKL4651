@@ -99,6 +99,18 @@ Descripción de la regla de negocio.
 
 ### 4.2. Mapa de historias de usuario (opcional)
 
+## Doce consultas repartidas en cuatro actividades
+
+| Explorar catálogo<br><sub>Solicitante</sub> | Mis préstamos<br><sub>Solicitante</sub> | Atender mostrador<br><sub>Técnico</sub> | Dirigir servicio<br><sub>Responsable</sub> |
+| :--- | :--- | :--- | :--- |
+| **RF01**<br>Catálogo | **RF03**<br>Préstamos activos | **RF06**<br>Préstamos vencidos | **RF10**<br>Penalizados |
+| **RF02**<br>Disponibilidad | **RF04**<br>Mi historial | **RF07**<br>Agenda del día | **RF11**<br>Más demandados |
+| | **RF05**<br>Mis penalizaciones | **RF08**<br>Vida de un artículo | **RF12**<br>Inventario |
+| | | **RF09**<br>Fuera de servicio | |
+
+*Mapa de historias de usuario · 4 actividades, 12 requisitos funcionales*
+
+*Cada columna es una actividad de un tipo de usuario; debajo, los requisitos funcionales que la cubren.*
 ### 4.3. Requisitos no funcionales (opcional)
 
 * **RNF01. Integridad ante accesos simultáneos:** Como solicitante quiero que, si otra persona reserva la misma unidad en el mismo instante, solo una de las dos reservas se confirme, para no presentarme en el mostrador y encontrarme sin equipo (soporta RN05).
