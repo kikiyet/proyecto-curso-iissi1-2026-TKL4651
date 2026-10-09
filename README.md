@@ -334,11 +334,6 @@ modelos de la categoría Realidad Virtual tienen un máximo de 24 horas para cua
 * **RNF04. Acceso con la cuenta universitaria:** Como usuario quiero iniciar sesión con mi UVUS, sin crear otra contraseña, para no tener que recordar una cuenta más.
 * **RNF05. Uso desde el móvil:** Como solicitante quiero que la aplicación se adapte a la pantalla del móvil, para poder reservar desde cualquier sitio.
 
-**R.N.F. 01. Título requisito no funcional**
-Como [tipo de usuario]
-quiero [servicio]
-para [razón]
-
 -- fin entregable 1 --
 
 ## 5. Modelo conceptual
