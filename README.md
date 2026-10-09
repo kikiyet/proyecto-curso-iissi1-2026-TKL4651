@@ -64,6 +64,48 @@
 | **Solicitante** | Usuario que pide material: estudiante, PDI o PTGAS. |
 | **Técnico** | Personal del servicio que gestiona el catálogo, entrega y recoge el material y resuelve incidencias. |
 | **UVUS** | Usuario Virtual de la Universidad de Sevilla: identificador único con el que cada miembro de la comunidad inicia sesión. |
+
+## Ciclo de vida de un artículo
+
+> Un artículo solo vuelve a prestarse después de pasar la revisión.
+
+```mermaid
+stateDiagram-v2
+    direction LR
+
+    state "Disponible" as Disponible
+    state "Prestado" as Prestado
+    state "En revisión" as EnRevision
+    state "En reparación" as EnReparacion
+    state "De baja" as DeBaja
+
+    [*] --> Disponible
+    Disponible --> Prestado: entrega
+    Prestado --> EnRevision: devolución (RN06)
+    Prestado --> DeBaja: pérdida (RN07)
+    EnRevision --> Disponible: revisión correcta
+    EnRevision --> EnReparacion: incidencia grave (RN07)
+    EnReparacion --> Disponible: reparado
+    EnReparacion --> DeBaja: irreparable
+
+    classDef disponible fill:#1e3a5f,stroke:#3b82f6,color:#fff
+    classDef baja fill:#3f1515,stroke:#ef4444,color:#fff
+    class Disponible disponible
+    class DeBaja baja
+```
+
+Toda devolución pasa por revisión antes de volver a **Disponible**; una incidencia grave lo manda a **reparación** y una pérdida lo da de **baja**.
+
+| Desde | Hacia | Evento | Regla |
+|---|---|---|---|
+| Disponible | Prestado | entrega | — |
+| Prestado | En revisión | devolución | RN06 |
+| Prestado | De baja | pérdida | RN07 |
+| En revisión | Disponible | revisión correcta | — |
+| En revisión | En reparación | incidencia grave | RN07 |
+| En reparación | Disponible | reparado | — |
+| En reparación | De baja | irreparable | — |
+
 ## 3. Visión general del sistema
 
 ### 3.1. Requisitos generales
