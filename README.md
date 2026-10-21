@@ -368,7 +368,66 @@ Como **solicitante** quiero que la aplicación se adapte a la pantalla del móvi
 
 ### 5.1. Diagramas de clases UML
 
-- con restricciones.
+<img width="3396" height="3420" alt="Proyecto_ISSI_UML" src="https://github.com/user-attachments/assets/3d23ab08-ba18-4511-a87e-c8f499dcc878" />
+
+
+#### Decisiones de diseño
+
+Los usuarios se representan mediante herencia. Usuario es una clase abstracta de la que heredan Solicitante, también abstracta, y Tecnico; de Solicitante heredan Estudiante y PDI. Ambas generalizaciones son completas y disjuntas: todo usuario pertenece exactamente a una de las clases hijas. Se ha elegido esta opción porque el técnico no pide material, por lo que no puede tener reservas, préstamos ni penalizaciones, y porque el estudiante y el PDI tienen límites distintos de préstamos y de duración (RN01 y RN02). Por ello, el tipo de usuario del RI01 no aparece como atributo, sino que lo determina la clase a la que pertenece cada objeto.
+
+Reserva y Préstamo son clases distintas porque representan momentos distintos: la reserva es un compromiso para recoger un artículo en el futuro y el préstamo es el periodo en que el solicitante tiene el artículo en su poder. Se relacionan con multiplicidad 0..1 en ambos extremos, porque una reserva puede cancelarse o caducar sin llegar a ser préstamo, y un préstamo puede hacerse en el mostrador sin reserva previa.
+
+El catálogo no se representa como una clase porque es único y consiste en el conjunto de todos los modelos agrupados por categoría.
+
+#### Reglas de derivación
+
+- **Solicitante./penalizado:** es verdadero si el solicitante tiene alguna penalización activa.
+- **Solicitante./numActivos:** número de reservas en estado PENDIENTE más número de préstamos sin fecha de devolución del solicitante.
+- **Modelo./unidadesDisponibles:** número de artículos del modelo en estado DISPONIBLE.
+- **Prestamo./diasRetraso:** días, contando cada fracción como un día completo, entre la fecha límite y la fecha de devolución o, si no se ha devuelto, la fecha actual. Vale 0 si no hay retraso.
+- **Penalizacion./activa:** es verdadero si la fecha de fin es posterior a la fecha actual y la penalización no ha sido levantada por un técnico.
+
+#### Restricciones
+
+- **R1 (RI01).** El uvus de un usuario es único.
+- **R2 (RI01).** El dni de un usuario es único.
+- **R3 (RI01).** El dni está formado por 8 cifras y una letra, o por una letra X, Y o Z seguida de 7 cifras y una letra.
+- **R4 (RI01).** El email de un estudiante termina en @alum.us.es, y el de un PDI o un técnico en @us.es.
+- **R5 (RI02).** El nombre de una categoría es único.
+- **R6 (RI02).** No pueden existir dos modelos con la misma marca y el mismo nombre comercial.
+- **R7 (RI03).** El código de inventario de un artículo es único.
+- **R8 (RI03).** El número de serie de un artículo es único.
+- **R9 (RI03).** La fecha de adquisición de un artículo no es posterior a la fecha actual.
+- **R10 (RI03).** El precio de compra de un artículo es mayor que 0.
+- **R11 (RI04).** La fecha de recogida de una reserva no es anterior a su fecha de creación.
+- **R12 (RI04).** La fecha prevista de devolución de una reserva es posterior a su fecha de recogida.
+- **R13 (RI04).** Toda reserva nueva se crea en estado PENDIENTE.
+- **R14 (RI04, RI05).** Una reserva está en estado RECOGIDA si y solo si tiene un préstamo asociado.
+- **R15 (RI05).** La fecha límite de un préstamo es posterior a su fecha de entrega.
+- **R16 (RI05).** La fecha de devolución de un préstamo, si existe, no es anterior a su fecha de entrega.
+- **R17 (RI05).** Un préstamo tiene estado de vuelta y técnico que lo recoge si y solo si tiene fecha de devolución.
+- **R18 (RI06).** El coste estimado de una incidencia, si existe, es mayor o igual que 0.
+- **R19 (RI06).** La fecha de una incidencia asociada a un préstamo no es anterior a la fecha de entrega de ese préstamo.
+- **R20 (RI07).** La fecha de fin de una penalización es posterior a su fecha de inicio.
+- **R21 (RI07).** Una penalización con motivo RETRASO está asociada solo a un préstamo; una con motivo INCIDENCIA_GRAVE_O_PERDIDA, solo a una incidencia; y una con motivo RESERVAS_NO_RECOGIDAS, a ninguno de los dos.
+- **R22 (RN01).** Un estudiante no puede sumar más de 2 reservas pendientes y préstamos en curso; un PDI, no más de 4.
+- **R23 (RN02).** Ni la duración de un préstamo (de la fecha de entrega a la fecha límite) ni la de una reserva (de la fecha de recogida a la fecha prevista de devolución) pueden superar 3 días para un estudiante o 7 días para un PDI. Si el modelo del artículo pertenece a la categoría Realidad Virtual, el máximo es de 24 horas para cualquier solicitante.
+- **R24 (RN03).** Un solicitante no puede tener reservas ni préstamos creados mientras tiene una penalización activa.
+- **R25 (RN04).** Un préstamo devuelto después de su fecha límite origina una penalización con motivo RETRASO de 2 días por cada día de retraso, con un máximo de 60 días. Si el solicitante ya tenía una penalización activa, la nueva comienza cuando termina la anterior.
+- **R26 (RN05).** Dos reservas pendientes o préstamos en curso del mismo artículo no pueden tener periodos que se solapen.
+- **R27 (RN06).** Un artículo en estado EN_REVISION, EN_REPARACION o DE_BAJA no puede asignarse a una reserva nueva ni a un préstamo nuevo.
+- **R28 (RN06).** Al registrarse la devolución de un préstamo, su artículo pasa a estado EN_REVISION.
+- **R29 (RN07).** Una incidencia de gravedad GRAVE deja el artículo en estado EN_REPARACION y origina una penalización de 30 días al solicitante del préstamo asociado. Una de gravedad PERDIDA deja el artículo en estado DE_BAJA y origina una penalización de 90 días.
+- **R30 (RN08).** La fecha de recogida de una reserva no supera su fecha de creación en más de 14 días.
+- **R31 (RN09).** Una reserva PENDIENTE pasa a CADUCADA si no se recoge en las 2 horas siguientes a su fecha de recogida. Un solicitante que acumula 3 reservas caducadas en el mismo cuatrimestre recibe una penalización de 7 días con motivo RESERVAS_NO_RECOGIDAS.
+- **R32 (RI02).** No puede eliminarse una categoría que tenga modelos asociados.
+- **R33 (RI04, RI05).** El préstamo en que se convierte una reserva pertenece al mismo solicitante y al mismo artículo que la reserva.
+- **R34 (RI06).** Una incidencia asociada a un préstamo afecta al mismo artículo de ese préstamo.
+- **R35 (RI07, RN04, RN07).** La penalización originada por un préstamo, o por una incidencia asociada a un préstamo, sanciona al solicitante de ese préstamo.
+- **R36 (apartado 2.1, RN06).** Un artículo solo puede entregarse en préstamo si está en estado DISPONIBLE, y mientras tiene un préstamo en curso su estado es PRESTADO.
+- **R37 (apartado 2.1).** Todo artículo se da de alta en estado DISPONIBLE.
+- **R38 (apartado 2.1).** DE_BAJA es un estado final: un artículo dado de baja no puede cambiar a ningún otro estado.
+
 
 ### 5.2. Escenarios de prueba
 
