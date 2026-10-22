@@ -368,7 +368,8 @@ Como **solicitante** quiero que la aplicación se adapte a la pantalla del móvi
 
 ### 5.1. Diagramas de clases UML
 
-<img width="3396" height="3420" alt="Proyecto_ISSI_UML" src="https://github.com/user-attachments/assets/3d23ab08-ba18-4511-a87e-c8f499dcc878" />
+<img width="3396" height="3420" alt="diagrama de clases drawio" src="https://github.com/user-attachments/assets/251c482c-a251-410b-9cd5-7d782c70608b" />
+
 
 
 #### Decisiones de diseño
