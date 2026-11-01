@@ -434,19 +434,271 @@ El catálogo no se representa como una clase porque es único y consiste en el c
 
 - con descripción textual y diagrama de objetos UML.
 
+
 ## 6. Matrices de trazabilidad
 
-- Matriz de trazabilidad entre los elementos del modelo conceptual y los requisitos.
+Las siguientes matrices relacionan los requisitos de información y las reglas de negocio del apartado 4 con las clases, asociaciones y restricciones del modelo conceptual del apartado 5. Se marca una **X** cuando un elemento del modelo interviene en el requisito correspondiente. Las celdas vacías indican que no existe una relación directa.
 
-|       | EntidadX   | AsociaciónX  | RestricciónX  | Entidad2 ...   | 
-|:------|:-----------|:-----------|:-----------|:-----------|
-| RI-1  | X          | X          | X          | X          |
-| RI-2  |            | X          |            | X          |
-| RF-1  |            | X          |            | X          |
-| RF-2  | X          |            | X          | X          |
-| RN-1  |            | X          |            |            |
-| RN-2  | X          | X          | X          |            |
-| ...   |            |            |            |            |
+### 6.1. Clases del modelo conceptual
+
+Se han separado las clases de usuarios de las que representan el material y su gestión para que las tablas sean más fáciles de leer.
+
+#### 6.1.1. Usuarios
+
+| Requisito | Usuario | Solicitante | Estudiante | PDI | Tecnico |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| RI01 | X | X | X | X | X |
+| RI02 |   |   |   |   |   |
+| RI03 |   |   |   |   |   |
+| RI04 |   | X |   |   |   |
+| RI05 |   | X |   |   | X |
+| RI06 |   |   |   |   | X |
+| RI07 |   | X |   |   | X |
+| RN01 |   | X | X | X |   |
+| RN02 |   | X | X | X |   |
+| RN03 |   | X |   |   |   |
+| RN04 |   | X |   |   |   |
+| RN05 |   |   |   |   |   |
+| RN06 |   |   |   |   |   |
+| RN07 |   | X |   |   |   |
+| RN08 |   |   |   |   |   |
+| RN09 |   | X |   |   |   |
+
+#### 6.1.2. Catálogo, artículos y gestión de préstamos
+
+| Requisito | Categoria | Modelo | Articulo | Reserva | Prestamo | Incidencia | Penalizacion |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| RI01 |   |   |   |   |   |   |   |
+| RI02 | X | X |   |   |   |   |   |
+| RI03 |   | X | X |   |   |   |   |
+| RI04 |   |   | X | X |   |   |   |
+| RI05 |   |   | X | X | X |   |   |
+| RI06 |   |   | X |   | X | X |   |
+| RI07 |   |   |   |   | X | X | X |
+| RN01 |   |   |   | X | X |   |   |
+| RN02 | X | X | X | X | X |   |   |
+| RN03 |   |   |   | X | X |   | X |
+| RN04 |   |   |   |   | X |   | X |
+| RN05 |   |   | X | X | X |   |   |
+| RN06 |   |   | X | X | X |   |   |
+| RN07 |   |   | X |   | X | X | X |
+| RN08 |   |   |   | X |   |   |   |
+| RN09 |   |   |   | X |   |   | X |
+
+#### 6.1.3. Generalizaciones
+
+El modelo distingue entre solicitantes y técnicos, y dentro de los solicitantes entre estudiantes y PDI. Estas diferencias son necesarias para identificar el tipo de usuario y aplicar los límites propios de cada uno.
+
+- **G01:** Usuario y Solicitante.
+- **G02:** Usuario y Tecnico.
+- **G03:** Solicitante y Estudiante.
+- **G04:** Solicitante y PDI.
+
+| Requisito | G01 | G02 | G03 | G04 |
+|:---|:---:|:---:|:---:|:---:|
+| RI01 | X | X | X | X |
+| RI02 |   |   |   |   |
+| RI03 |   |   |   |   |
+| RI04 |   |   |   |   |
+| RI05 |   |   |   |   |
+| RI06 |   |   |   |   |
+| RI07 |   |   |   |   |
+| RN01 |   |   | X | X |
+| RN02 |   |   | X | X |
+| RN03 |   |   |   |   |
+| RN04 |   |   |   |   |
+| RN05 |   |   |   |   |
+| RN06 |   |   |   |   |
+| RN07 |   |   |   |   |
+| RN08 |   |   |   |   |
+| RN09 |   |   |   |   |
+
+#### 6.1.4. Atributos derivados
+
+También se relacionan los atributos derivados del apartado 5.1 con las reglas de negocio en las que se utilizan.
+
+- **D01:** Solicitante./penalizado.
+- **D02:** Solicitante./numActivos.
+- **D03:** Modelo./unidadesDisponibles.
+- **D04:** Prestamo./diasRetraso.
+- **D05:** Penalizacion./activa.
+
+| Requisito | D01 | D02 | D03 | D04 | D05 |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| RI01 |   |   |   |   |   |
+| RI02 |   |   |   |   |   |
+| RI03 |   |   |   |   |   |
+| RI04 |   |   |   |   |   |
+| RI05 |   |   |   |   |   |
+| RI06 |   |   |   |   |   |
+| RI07 |   |   |   |   |   |
+| RN01 |   | X |   |   |   |
+| RN02 |   |   |   |   |   |
+| RN03 | X |   |   |   | X |
+| RN04 |   |   |   | X | X |
+| RN05 |   |   |   |   |   |
+| RN06 |   |   | X |   |   |
+| RN07 |   |   |   |   |   |
+| RN08 |   |   |   |   |   |
+| RN09 |   |   |   |   |   |
+
+### 6.2. Asociaciones del modelo conceptual
+
+Las asociaciones permiten relacionar cada artículo con su modelo, las reservas y préstamos con sus solicitantes y las incidencias o penalizaciones con su origen. Se identifican con la letra A para que puedan consultarse en las tablas sin repetir los nombres completos.
+
+- **A01:** Categoria y Modelo.
+- **A02:** Modelo y Articulo.
+- **A03:** Solicitante y Reserva.
+- **A04:** Articulo y Reserva.
+- **A05:** Solicitante y Prestamo.
+- **A06:** Articulo y Prestamo.
+- **A07:** Reserva y Prestamo.
+- **A08:** Tecnico y Prestamo, por la entrega.
+- **A09:** Tecnico y Prestamo, por la recogida.
+- **A10:** Articulo e Incidencia.
+- **A11:** Prestamo e Incidencia.
+- **A12:** Tecnico e Incidencia.
+- **A13:** Solicitante y Penalizacion.
+- **A14:** Prestamo y Penalizacion.
+- **A15:** Incidencia y Penalizacion.
+- **A16:** Tecnico y Penalizacion, por su levantamiento.
+
+#### 6.2.1. Asociaciones A01 a A08
+
+| Requisito | A01 | A02 | A03 | A04 | A05 | A06 | A07 | A08 |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| RI01 |   |   |   |   |   |   |   |   |
+| RI02 | X |   |   |   |   |   |   |   |
+| RI03 |   | X |   |   |   |   |   |   |
+| RI04 |   |   | X | X |   |   | X |   |
+| RI05 |   |   |   |   | X | X | X | X |
+| RI06 |   |   |   |   |   |   |   |   |
+| RI07 |   |   |   |   |   |   |   |   |
+| RN01 |   |   | X |   | X |   |   |   |
+| RN02 | X | X | X | X | X | X |   |   |
+| RN03 |   |   | X |   | X |   |   |   |
+| RN04 |   |   |   |   | X |   |   |   |
+| RN05 |   |   |   | X |   | X |   |   |
+| RN06 |   |   |   | X |   | X |   |   |
+| RN07 |   |   |   |   | X | X |   |   |
+| RN08 |   |   |   |   |   |   |   |   |
+| RN09 |   |   | X |   |   |   |   |   |
+
+#### 6.2.2. Asociaciones A09 a A16
+
+| Requisito | A09 | A10 | A11 | A12 | A13 | A14 | A15 | A16 |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| RI01 |   |   |   |   |   |   |   |   |
+| RI02 |   |   |   |   |   |   |   |   |
+| RI03 |   |   |   |   |   |   |   |   |
+| RI04 |   |   |   |   |   |   |   |   |
+| RI05 | X |   |   |   |   |   |   |   |
+| RI06 |   | X | X | X |   |   |   |   |
+| RI07 |   |   |   | X | X | X | X | X |
+| RN01 |   |   |   |   |   |   |   |   |
+| RN02 |   |   |   |   |   |   |   |   |
+| RN03 |   |   |   |   | X |   |   |   |
+| RN04 |   |   |   |   | X | X |   |   |
+| RN05 |   |   |   |   |   |   |   |   |
+| RN06 |   |   |   |   |   |   |   |   |
+| RN07 |   | X | X |   | X |   | X |   |
+| RN08 |   |   |   |   |   |   |   |   |
+| RN09 |   |   |   |   | X |   |   |   |
+
+### 6.3. Restricciones del modelo conceptual
+
+Las restricciones R1 a R38 están descritas en el apartado 5.1. En estas tablas se indica qué requisito de información o regla de negocio justifica cada una.
+
+#### 6.3.1. Restricciones R1 a R10
+
+| Requisito | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| RI01 | X | X | X | X |   |   |   |   |   |   |
+| RI02 |   |   |   |   | X | X |   |   |   |   |
+| RI03 |   |   |   |   |   |   | X | X | X | X |
+| RI04 |   |   |   |   |   |   |   |   |   |   |
+| RI05 |   |   |   |   |   |   |   |   |   |   |
+| RI06 |   |   |   |   |   |   |   |   |   |   |
+| RI07 |   |   |   |   |   |   |   |   |   |   |
+| RN01 |   |   |   |   |   |   |   |   |   |   |
+| RN02 |   |   |   |   |   |   |   |   |   |   |
+| RN03 |   |   |   |   |   |   |   |   |   |   |
+| RN04 |   |   |   |   |   |   |   |   |   |   |
+| RN05 |   |   |   |   |   |   |   |   |   |   |
+| RN06 |   |   |   |   |   |   |   |   |   |   |
+| RN07 |   |   |   |   |   |   |   |   |   |   |
+| RN08 |   |   |   |   |   |   |   |   |   |   |
+| RN09 |   |   |   |   |   |   |   |   |   |   |
+
+#### 6.3.2. Restricciones R11 a R21
+
+| Requisito | R11 | R12 | R13 | R14 | R15 | R16 | R17 | R18 | R19 | R20 | R21 |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| RI01 |   |   |   |   |   |   |   |   |   |   |   |
+| RI02 |   |   |   |   |   |   |   |   |   |   |   |
+| RI03 |   |   |   |   |   |   |   |   |   |   |   |
+| RI04 | X | X | X | X |   |   |   |   |   |   |   |
+| RI05 |   |   |   | X | X | X | X |   |   |   |   |
+| RI06 |   |   |   |   |   |   |   | X | X |   |   |
+| RI07 |   |   |   |   |   |   |   |   |   | X | X |
+| RN01 |   |   |   |   |   |   |   |   |   |   |   |
+| RN02 |   |   |   |   |   |   |   |   |   |   |   |
+| RN03 |   |   |   |   |   |   |   |   |   |   |   |
+| RN04 |   |   |   |   |   |   |   |   |   |   |   |
+| RN05 |   |   |   |   |   |   |   |   |   |   |   |
+| RN06 |   |   |   |   |   |   |   |   |   |   |   |
+| RN07 |   |   |   |   |   |   |   |   |   |   |   |
+| RN08 |   |   |   |   |   |   |   |   |   |   |   |
+| RN09 |   |   |   |   |   |   |   |   |   |   |   |
+
+#### 6.3.3. Restricciones R22 a R31
+
+| Requisito | R22 | R23 | R24 | R25 | R26 | R27 | R28 | R29 | R30 | R31 |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| RI01 |   |   |   |   |   |   |   |   |   |   |
+| RI02 |   |   |   |   |   |   |   |   |   |   |
+| RI03 |   |   |   |   |   |   |   |   |   |   |
+| RI04 |   |   |   |   |   |   |   |   |   |   |
+| RI05 |   |   |   |   |   |   |   |   |   |   |
+| RI06 |   |   |   |   |   |   |   |   |   |   |
+| RI07 |   |   |   |   |   |   |   |   |   |   |
+| RN01 | X |   |   |   |   |   |   |   |   |   |
+| RN02 |   | X |   |   |   |   |   |   |   |   |
+| RN03 |   |   | X |   |   |   |   |   |   |   |
+| RN04 |   |   |   | X |   |   |   |   |   |   |
+| RN05 |   |   |   |   | X |   |   |   |   |   |
+| RN06 |   |   |   |   |   | X | X |   |   |   |
+| RN07 |   |   |   |   |   |   |   | X |   |   |
+| RN08 |   |   |   |   |   |   |   |   | X |   |
+| RN09 |   |   |   |   |   |   |   |   |   | X |
+
+#### 6.3.4. Restricciones R32 a R38
+
+| Requisito | R32 | R33 | R34 | R35 | R36 | R37 | R38 |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| RI01 |   |   |   |   |   |   |   |
+| RI02 | X |   |   |   |   |   |   |
+| RI03 |   |   |   |   |   |   |   |
+| RI04 |   | X |   |   |   |   |   |
+| RI05 |   | X |   |   |   |   |   |
+| RI06 |   |   | X |   |   |   |   |
+| RI07 |   |   |   | X |   |   |   |
+| RN01 |   |   |   |   |   |   |   |
+| RN02 |   |   |   |   |   |   |   |
+| RN03 |   |   |   |   |   |   |   |
+| RN04 |   |   |   | X |   |   |   |
+| RN05 |   |   |   |   |   |   |   |
+| RN06 |   |   |   |   | X |   |   |
+| RN07 |   |   |   | X |   |   |   |
+| RN08 |   |   |   |   |   |   |   |
+| RN09 |   |   |   |   |   |   |   |
+
+### 6.4. Revisión de la trazabilidad
+
+Todos los requisitos de información y las reglas de negocio tienen al menos una correspondencia con las clases y restricciones del modelo conceptual.
+
+Las restricciones **R37** y **R38** describen el estado inicial de los artículos y el carácter definitivo del estado DE_BAJA. Ambas se recogen en el ciclo de vida del artículo del apartado 2.1, pero todavía no están asignadas expresamente a un requisito de información o regla de negocio del apartado 4. Por ese motivo, sus columnas se han dejado sin marcar.
+
 
 -- fin entregable 2 --
 
