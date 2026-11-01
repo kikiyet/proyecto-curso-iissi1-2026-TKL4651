@@ -584,10 +584,11 @@ Las asociaciones permiten relacionar cada artículo con su modelo, las reservas 
 | RN08 |   |   |   |   |   |   |   |   |
 | RN09 |   |   | X |   |   |   |   |   |
 
+
 #### 6.2.2. Asociaciones A09 a A16
 
 | Requisito | A09 | A10 | A11 | A12 | A13 | A14 | A15 | A16 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | RI01 |   |   |   |   |   |   |   |   |
 | RI02 |   |   |   |   |   |   |   |   |
 | RI03 |   |   |   |   |   |   |   |   |
@@ -604,6 +605,7 @@ Las asociaciones permiten relacionar cada artículo con su modelo, las reservas 
 | RN07 |   | X | X |   | X |   | X |   |
 | RN08 |   |   |   |   |   |   |   |   |
 | RN09 |   |   |   |   | X |   |   |   |
+
 
 ### 6.3. Restricciones del modelo conceptual
 
@@ -630,10 +632,11 @@ Las restricciones R1 a R38 están descritas en el apartado 5.1. En estas tablas 
 | RN08 |   |   |   |   |   |   |   |   |   |   |
 | RN09 |   |   |   |   |   |   |   |   |   |   |
 
+
 #### 6.3.2. Restricciones R11 a R21
 
 | Requisito | R11 | R12 | R13 | R14 | R15 | R16 | R17 | R18 | R19 | R20 | R21 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | RI01 |   |   |   |   |   |   |   |   |   |   |   |
 | RI02 |   |   |   |   |   |   |   |   |   |   |   |
 | RI03 |   |   |   |   |   |   |   |   |   |   |   |
@@ -651,10 +654,12 @@ Las restricciones R1 a R38 están descritas en el apartado 5.1. En estas tablas 
 | RN08 |   |   |   |   |   |   |   |   |   |   |   |
 | RN09 |   |   |   |   |   |   |   |   |   |   |   |
 
+
+
 #### 6.3.3. Restricciones R22 a R31
 
 | Requisito | R22 | R23 | R24 | R25 | R26 | R27 | R28 | R29 | R30 | R31 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | RI01 |   |   |   |   |   |   |   |   |   |   |
 | RI02 |   |   |   |   |   |   |   |   |   |   |
 | RI03 |   |   |   |   |   |   |   |   |   |   |
@@ -671,6 +676,7 @@ Las restricciones R1 a R38 están descritas en el apartado 5.1. En estas tablas 
 | RN07 |   |   |   |   |   |   |   | X |   |   |
 | RN08 |   |   |   |   |   |   |   |   | X |   |
 | RN09 |   |   |   |   |   |   |   |   |   | X |
+
 
 #### 6.3.4. Restricciones R32 a R38
 
