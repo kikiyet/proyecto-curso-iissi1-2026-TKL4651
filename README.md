@@ -431,8 +431,19 @@ El catálogo no se representa como una clase porque es único y consiste en el c
 
 
 ### 5.2. Escenarios de prueba
+**Caso 1.-** Ramirez Soria, estudiante con uvus PKN3387, decide formular una reserva el día 1 de Octubre de 2026 de una cámara Canon EOS R50, para el día siguiente.
 
-- con descripción textual y diagrama de objetos UML.
+<img width="1192" height="923" alt="image" src="https://github.com/user-attachments/assets/f510946c-e363-4fad-8006-11fe275dd34b" />
+
+**Caso 2.-** Ramirez Soria, estudiante con uvus PKN3387, recoge la Cámara que reservo el día anterior del técnico Gutierrez Asencio, quien organiza todo el resto y crea la instancia del prestamo en los datos, actualizando el estado del articulo, la reserva...
+
+<img width="1069" height="1042" alt="image" src="https://github.com/user-attachments/assets/a44dd1ce-6827-414d-bcef-668e2f4fd444" />
+
+
+**Caso 3.-** El PDI Águilar Ramos devuelve un proyector el Día 10, antes de la fecha prevista, con daños. El técnico Gutierrez Asencio nota que el articulo prestado, un proyector, está dañado. El técnico Gutierrez anota la incidencia, cambia el estado del y origina la penalización al PDI.
+
+<img width="1281" height="1152" alt="image" src="https://github.com/user-attachments/assets/b44e7a7f-ad64-45ba-b34a-97acf85eb81a" />
+
 
 
 ## 6. Matrices de trazabilidad
