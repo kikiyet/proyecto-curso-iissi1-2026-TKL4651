@@ -1,11 +1,15 @@
-# Título Proyecto
+# EquipaUS
 
-## Miembros del grupo   L5-AM-7
+Sistema de gestión del préstamo de material de la Escuela (portátiles, cámaras, gafas de realidad virtual, kits de electrónica y otros equipos).
 
-1. Robles Pérez, Javier 
+## Miembros del grupo L5-AM-7
+
+1. Robles Pérez, Javier
 2. Rodríguez Gallego, Eloy
 3. Martínez Adega, Nicolás
 4. García Martínez, Daniel
+
+---
 
 ## 1. Introducción al problema
 
@@ -96,9 +100,157 @@ Las **consultas y estadísticas** ofrecen a cada usuario los listados que necesi
 
 ## 4. Catálogo de requisitos
 
-### 4.1. Requisitos funcionales
+### 4.1. Mapa de historias de usuario
 
-En este entregable solo se recogen requisitos funcionales de **listado y consulta**. Cada uno indica las reglas de negocio (apartado 4.1.2) que le afectan.
+Los requisitos funcionales se organizan en cuatro actividades, según el usuario que las realiza.
+
+**Explorar el catálogo (solicitante).** Agrupa las consultas que el solicitante hace antes de pedir material: consultar el catálogo por categorías (RF01) y consultar la disponibilidad de un modelo en unas fechas (RF02).
+
+**Seguir mi actividad (solicitante).** Agrupa las consultas sobre el propio solicitante, siguiendo el recorrido del material: lo que va a recoger, es decir, sus reservas pendientes (RF03); lo que tiene ahora, es decir, sus préstamos en curso (RF04); lo que ya devolvió, es decir, su historial (RF05); y su situación de penalización (RF06).
+
+**Atender el mostrador (técnico).** Agrupa las consultas del trabajo diario en el mostrador: préstamos vencidos (RF07), agenda del día (RF08), historial de un artículo (RF09) y artículos fuera de servicio (RF10).
+
+**Supervisar el servicio (técnico).** Agrupa las consultas para revisar y planificar el servicio: solicitantes penalizados (RF11), modelos más demandados (RF12) e inventario por estado y categoría (RF13).
+
+### 4.2. Requisitos de información
+
+#### RI01. Información de usuarios
+
+Como **técnico** quiero almacenar el UVUS, DNI o NIE, nombre, apellidos, correo institucional, teléfono, tipo de usuario (estudiante, PDI o técnico) y fecha de alta de cada usuario, para identificar a quién se presta cada equipo y poder contactarle.
+
+El UVUS y el DNI o NIE son únicos. El DNI debe tener 8 cifras y una letra, y el NIE una letra X, Y o Z seguida de 7 cifras y una letra. El correo de los estudiantes debe terminar en @alum.us.es, y el del PDI y los técnicos en @us.es. Todos los datos son obligatorios salvo el teléfono.
+
+#### RI02. Información de categorías y modelos
+
+Como **técnico** quiero almacenar las categorías (nombre y descripción) y, de cada modelo, su marca, nombre comercial, descripción, especificaciones técnicas, fotografía y categoría, para mostrar un catálogo claro a los solicitantes.
+
+No pueden existir dos categorías con el mismo nombre ni dos modelos con la misma marca y nombre comercial. Todo modelo pertenece obligatoriamente a una única categoría, y no puede eliminarse una categoría que tenga modelos asociados.
+
+#### RI03. Información de artículos
+
+Como **técnico** quiero almacenar de cada artículo su código de inventario, número de serie, modelo, fecha de adquisición, precio de compra, ubicación y estado, para saber exactamente qué equipo es y dónde está.
+
+El código de inventario y el número de serie son únicos. La fecha de adquisición no puede ser posterior a la fecha actual y el precio de compra debe ser mayor que 0. El estado solo puede ser Disponible, Prestado, En revisión, En reparación o De baja, y todo artículo pertenece obligatoriamente a un modelo. Todo artículo se da de alta en estado Disponible y, una vez De baja, ya no puede cambiar de estado (apartado 2.1).
+
+#### RI04. Información de reservas
+
+Como **solicitante** quiero que se guarde de cada reserva quién la hace, qué artículo se le asigna, cuándo se creó, la fecha y hora en que va a recogerlo, la fecha y hora en que prevé devolverlo, y su estado, para asegurarme el material que necesito en una fecha concreta.
+
+La fecha de recogida no puede ser anterior a la fecha de creación y la fecha prevista de devolución debe ser posterior a la de recogida. El estado solo puede ser Pendiente, Recogida, Cancelada o Caducada, y toda reserva nueva se crea como Pendiente.
+
+#### RI05. Información de préstamos
+
+Como **técnico** quiero almacenar de cada préstamo el solicitante, el artículo, la reserva de la que procede (si existe), el técnico que lo entrega, la fecha y hora de entrega, la fecha límite de devolución, la fecha y hora de devolución real, el técnico que lo recoge y el estado en que vuelve el material (Correcto o Con daños), para tener la trazabilidad completa de cada equipo.
+
+La fecha límite debe ser posterior a la de entrega y la fecha de devolución real, si existe, no puede ser anterior a la de entrega. Mientras no haya devolución, el préstamo se considera en curso, y el técnico que recoge y el estado de vuelta solo pueden registrarse cuando haya devolución.
+
+#### RI06. Información de incidencias
+
+Como **técnico** quiero almacenar de cada incidencia el artículo afectado, el préstamo en que se detectó (si existe), el técnico que la registra, la fecha, una descripción, una foto opcional del daño, la gravedad, el coste estimado de reparación y su estado, para controlar las averías y saber quién es responsable.
+
+La gravedad solo puede ser Leve, Grave o Pérdida, y el estado Abierta, En reparación, Resuelta o Baja definitiva. El coste estimado, si se indica, debe ser mayor o igual que 0, y la fecha de la incidencia no puede ser anterior a la entrega del préstamo asociado.
+
+#### RI07. Información de penalizaciones
+
+Como **técnico** quiero almacenar de cada penalización el solicitante, el motivo, el préstamo o la incidencia que la originó, la fecha de inicio, la fecha de fin y, si se levantó manualmente, qué técnico lo hizo, para aplicar las sanciones de forma justa y poder revisarlas.
+
+El motivo solo puede ser Retraso, Incidencia grave o pérdida, o Reservas no recogidas. La fecha de fin debe ser posterior a la de inicio. Toda penalización por retraso o por incidencia debe estar asociada al préstamo o a la incidencia que la causó.
+
+### 4.3. Reglas de negocio
+
+#### RN01. Máximo de reservas y préstamos simultáneos
+
+Un solicitante no puede superar un número máximo de reservas pendientes y préstamos en curso sumados: 2 en el caso de los estudiantes y 4 en el del PDI. Las reservas cuentan aunque el solicitante todavía no tenga el material, porque ya ocupan un artículo. Si se intenta superar el límite, la reserva se rechaza con el mensaje «Has alcanzado el máximo de N reservas y préstamos activos».
+
+**Prueba de aceptación**
+
+- **Situación inicial:** la estudiante Lucía tiene un portátil prestado y una reserva pendiente de una cámara para el viernes.
+- **Acción:** intenta reservar un kit Arduino.
+- **Resultado esperado:** la reserva se rechaza con el mensaje «Has alcanzado el máximo de 2 reservas y préstamos activos».
+
+#### RN02. Duración máxima del préstamo
+
+La fecha límite de devolución no puede superar, desde la entrega, 3 días naturales para los estudiantes y 7 días para el PDI. Los modelos de la categoría Realidad Virtual tienen un máximo de 24 horas para cualquier solicitante, debido a su alta demanda.
+
+**Prueba de aceptación**
+
+- **Situación inicial:** un profesor (PDI) va a reservar unas gafas Meta Quest 3.
+- **Acción:** indica que las devolverá 48 horas después de recogerlas.
+- **Resultado esperado:** la reserva se rechaza porque la duración máxima para los modelos de Realidad Virtual es de 24 horas, aunque el PDI tenga hasta 7 días para el resto del material.
+
+#### RN03. Bloqueo por penalización activa
+
+Un solicitante con una penalización cuya fecha de fin aún no ha llegado no puede hacer reservas ni recoger material. Sí puede devolver lo que tenga prestado y consultar sus datos.
+
+**Prueba de aceptación**
+
+- **Situación inicial:** Pablo tiene una penalización activa hasta el 30 de octubre.
+- **Acción:** el 25 de octubre intenta reservar una cámara.
+- **Resultado esperado:** la reserva se rechaza y se le indica que está penalizado hasta el 30 de octubre.
+
+#### RN04. Penalización automática por retraso
+
+Al registrar una devolución posterior a la fecha límite se genera automáticamente una penalización de 2 días por cada día (o fracción de día) de retraso, con un máximo de 60 días. Si el solicitante ya estaba penalizado, la nueva penalización empieza cuando termine la anterior.
+
+**Prueba de aceptación**
+
+- **Situación inicial:** un portátil tenía como fecha límite de devolución el 20 de octubre a las 14:00.
+- **Acción:** se devuelve el 23 de octubre a las 10:00, con un retraso de 2 días y 20 horas, que cuenta como 3 días.
+- **Resultado esperado:** el sistema crea automáticamente una penalización de 6 días.
+
+#### RN05. Sin solapamiento sobre un mismo artículo
+
+Un artículo no puede tener dos reservas pendientes o préstamos en curso cuyos periodos se solapen, aunque sea un minuto. Si dos solicitantes intentan reservar el mismo artículo a la vez, solo una de las dos reservas se confirma.
+
+**Prueba de aceptación**
+
+- **Situación inicial:** el proyector PRY-004 está reservado del 20 al 22 de octubre.
+- **Acción:** otro solicitante intenta reservar el proyector PRY-004 del 21 al 23 de octubre.
+- **Resultado esperado:** la reserva se rechaza para ese artículo, aunque el resto de proyectores libres siguen disponibles.
+
+#### RN06. Solo se prestan artículos operativos
+
+Un artículo en estado En revisión, En reparación o De baja no puede asignarse a ninguna reserva ni entregarse en préstamo. Toda devolución deja el artículo En revisión hasta que un técnico lo comprueba y lo pasa a Disponible.
+
+**Prueba de aceptación**
+
+- **Situación inicial:** la cámara CAM-002 está En reparación.
+- **Acción:** un técnico intenta entregarla en préstamo en el mostrador.
+- **Resultado esperado:** el préstamo se rechaza y la cámara no se cuenta como disponible en el catálogo.
+
+#### RN07. Consecuencias de una incidencia grave o una pérdida
+
+Al registrar una incidencia de gravedad Grave, el artículo pasa automáticamente a En reparación y el solicitante responsable recibe una penalización de 30 días. Si la gravedad es Pérdida, el artículo pasa a De baja y la penalización es de 90 días.
+
+**Prueba de aceptación**
+
+- **Situación inicial:** unas gafas de realidad virtual se devuelven con la lente rota.
+- **Acción:** el técnico registra una incidencia de gravedad Grave.
+- **Resultado esperado:** las gafas pasan a En reparación y el solicitante recibe una penalización de 30 días.
+
+#### RN08. Antelación máxima de las reservas
+
+No se puede reservar con más de 14 días de antelación, para evitar que los equipos queden bloqueados durante semanas por reservas hechas «por si acaso».
+
+**Prueba de aceptación**
+
+- **Situación inicial:** hoy es 8 de octubre.
+- **Acción:** un solicitante intenta reservar un portátil para recogerlo el 30 de octubre.
+- **Resultado esperado:** la reserva se rechaza, ya que solo se admiten reservas con recogida hasta el 22 de octubre.
+
+#### RN09. Caducidad de reservas no recogidas
+
+Una reserva que no se recoge en las 2 horas siguientes a su hora de recogida pasa a Caducada, nunca llega a ser préstamo y el artículo queda libre para otros. Si un solicitante acumula 3 reservas caducadas en el mismo cuatrimestre, recibe una penalización de 7 días.
+
+**Prueba de aceptación**
+
+- **Situación inicial:** Ana tiene 2 reservas caducadas en el cuatrimestre actual.
+- **Acción:** no recoge una tercera reserva en las 2 horas siguientes a su hora de recogida.
+- **Resultado esperado:** la reserva pasa a Caducada y Ana recibe una penalización de 7 días.
+
+### 4.4. Requisitos funcionales
+
+En este entregable solo se recogen requisitos funcionales de **listado y consulta**. Cada uno indica las reglas de negocio (apartado 4.3) que le afectan.
 
 #### RF01. Consultar el catálogo por categorías
 
@@ -196,155 +348,7 @@ Como **técnico** quiero un resumen del número de artículos de cada categoría
 
 La suma de todos los artículos del resumen coincide con el total de artículos registrados. Los artículos dados de baja se muestran por separado y no suman al valor del inventario activo.
 
-### 4.1.1. Requisitos de información
-
-#### RI01. Información de usuarios
-
-Como **técnico** quiero almacenar el UVUS, DNI o NIE, nombre, apellidos, correo institucional, teléfono, tipo de usuario (estudiante, PDI o técnico) y fecha de alta de cada usuario, para identificar a quién se presta cada equipo y poder contactarle.
-
-El UVUS y el DNI o NIE son únicos. El DNI debe tener 8 cifras y una letra, y el NIE una letra X, Y o Z seguida de 7 cifras y una letra. El correo de los estudiantes debe terminar en @alum.us.es, y el del PDI y los técnicos en @us.es. Todos los datos son obligatorios salvo el teléfono.
-
-#### RI02. Información de categorías y modelos
-
-Como **técnico** quiero almacenar las categorías (nombre y descripción) y, de cada modelo, su marca, nombre comercial, descripción, especificaciones técnicas, fotografía y categoría, para mostrar un catálogo claro a los solicitantes.
-
-No pueden existir dos categorías con el mismo nombre ni dos modelos con la misma marca y nombre comercial. Todo modelo pertenece obligatoriamente a una única categoría, y no puede eliminarse una categoría que tenga modelos asociados.
-
-#### RI03. Información de artículos
-
-Como **técnico** quiero almacenar de cada artículo su código de inventario, número de serie, modelo, fecha de adquisición, precio de compra, ubicación y estado, para saber exactamente qué equipo es y dónde está.
-
-El código de inventario y el número de serie son únicos. La fecha de adquisición no puede ser posterior a la fecha actual y el precio de compra debe ser mayor que 0. El estado solo puede ser Disponible, Prestado, En revisión, En reparación o De baja, y todo artículo pertenece obligatoriamente a un modelo.
-
-#### RI04. Información de reservas
-
-Como **solicitante** quiero que se guarde de cada reserva quién la hace, qué artículo se le asigna, cuándo se creó, la fecha y hora en que va a recogerlo, la fecha y hora en que prevé devolverlo, y su estado, para asegurarme el material que necesito en una fecha concreta.
-
-La fecha de recogida no puede ser anterior a la fecha de creación y la fecha prevista de devolución debe ser posterior a la de recogida. El estado solo puede ser Pendiente, Recogida, Cancelada o Caducada, y toda reserva nueva se crea como Pendiente.
-
-#### RI05. Información de préstamos
-
-Como **técnico** quiero almacenar de cada préstamo el solicitante, el artículo, la reserva de la que procede (si existe), el técnico que lo entrega, la fecha y hora de entrega, la fecha límite de devolución, la fecha y hora de devolución real, el técnico que lo recoge y el estado en que vuelve el material (Correcto o Con daños), para tener la trazabilidad completa de cada equipo.
-
-La fecha límite debe ser posterior a la de entrega y la fecha de devolución real, si existe, no puede ser anterior a la de entrega. Mientras no haya devolución, el préstamo se considera en curso, y el técnico que recoge y el estado de vuelta solo pueden registrarse cuando haya devolución.
-
-#### RI06. Información de incidencias
-
-Como **técnico** quiero almacenar de cada incidencia el artículo afectado, el préstamo en que se detectó (si existe), el técnico que la registra, la fecha, una descripción, una foto opcional del daño, la gravedad, el coste estimado de reparación y su estado, para controlar las averías y saber quién es responsable.
-
-La gravedad solo puede ser Leve, Grave o Pérdida, y el estado Abierta, En reparación, Resuelta o Baja definitiva. El coste estimado, si se indica, debe ser mayor o igual que 0, y la fecha de la incidencia no puede ser anterior a la entrega del préstamo asociado.
-
-#### RI07. Información de penalizaciones
-
-Como **técnico** quiero almacenar de cada penalización el solicitante, el motivo, el préstamo o la incidencia que la originó, la fecha de inicio, la fecha de fin y, si se levantó manualmente, qué técnico lo hizo, para aplicar las sanciones de forma justa y poder revisarlas.
-
-El motivo solo puede ser Retraso, Incidencia grave o pérdida, o Reservas no recogidas. La fecha de fin debe ser posterior a la de inicio. Toda penalización por retraso o por incidencia debe estar asociada al préstamo o a la incidencia que la causó.
-
-### 4.1.2. Reglas de negocio
-
-#### RN01. Máximo de reservas y préstamos simultáneos
-
-Un solicitante no puede superar un número máximo de reservas pendientes y préstamos en curso sumados: 2 en el caso de los estudiantes y 4 en el del PDI. Las reservas cuentan aunque el solicitante todavía no tenga el material, porque ya ocupan un artículo. Si se intenta superar el límite, la reserva se rechaza con el mensaje «Has alcanzado el máximo de N reservas y préstamos activos».
-
-**Prueba de aceptación**
-
-- **Situación inicial:** la estudiante Lucía tiene un portátil prestado y una reserva pendiente de una cámara para el viernes.
-- **Acción:** intenta reservar un kit Arduino.
-- **Resultado esperado:** la reserva se rechaza con el mensaje «Has alcanzado el máximo de 2 reservas y préstamos activos».
-
-#### RN02. Duración máxima del préstamo
-
-La fecha límite de devolución no puede superar, desde la entrega, 3 días naturales para los estudiantes y 7 días para el PDI. Los modelos de la categoría Realidad Virtual tienen un máximo de 24 horas para cualquier solicitante, debido a su alta demanda.
-
-**Prueba de aceptación**
-
-- **Situación inicial:** un profesor (PDI) va a reservar unas gafas Meta Quest 3.
-- **Acción:** indica que las devolverá 48 horas después de recogerlas.
-- **Resultado esperado:** la reserva se rechaza porque la duración máxima para los modelos de Realidad Virtual es de 24 horas, aunque el PDI tenga hasta 7 días para el resto del material.
-
-#### RN03. Bloqueo por penalización activa
-
-Un solicitante con una penalización cuya fecha de fin aún no ha llegado no puede hacer reservas ni recoger material. Sí puede devolver lo que tenga prestado y consultar sus datos.
-
-**Prueba de aceptación**
-
-- **Situación inicial:** Pablo tiene una penalización activa hasta el 30 de octubre.
-- **Acción:** el 25 de octubre intenta reservar una cámara.
-- **Resultado esperado:** la reserva se rechaza y se le indica que está penalizado hasta el 30 de octubre.
-
-#### RN04. Penalización automática por retraso
-
-Al registrar una devolución posterior a la fecha límite se genera automáticamente una penalización de 2 días por cada día (o fracción de día) de retraso, con un máximo de 60 días. Si el solicitante ya estaba penalizado, la nueva penalización empieza cuando termine la anterior.
-
-**Prueba de aceptación**
-
-- **Situación inicial:** un portátil tenía como fecha límite de devolución el 20 de octubre a las 14:00.
-- **Acción:** se devuelve el 23 de octubre a las 10:00, con un retraso de 2 días y 20 horas, que cuenta como 3 días.
-- **Resultado esperado:** el sistema crea automáticamente una penalización de 6 días.
-
-#### RN05. Sin solapamiento sobre un mismo artículo
-
-Un artículo no puede tener dos reservas pendientes o préstamos en curso cuyos periodos se solapen, aunque sea un minuto. Si dos solicitantes intentan reservar el mismo artículo a la vez, solo una de las dos reservas se confirma.
-
-**Prueba de aceptación**
-
-- **Situación inicial:** el proyector PRY-004 está reservado del 20 al 22 de octubre.
-- **Acción:** otro solicitante intenta reservar el proyector PRY-004 del 21 al 23 de octubre.
-- **Resultado esperado:** la reserva se rechaza para ese artículo, aunque el resto de proyectores libres siguen disponibles.
-
-#### RN06. Solo se prestan artículos operativos
-
-Un artículo en estado En revisión, En reparación o De baja no puede asignarse a ninguna reserva ni entregarse en préstamo. Toda devolución deja el artículo En revisión hasta que un técnico lo comprueba y lo pasa a Disponible.
-
-**Prueba de aceptación**
-
-- **Situación inicial:** la cámara CAM-002 está En reparación.
-- **Acción:** un técnico intenta entregarla en préstamo en el mostrador.
-- **Resultado esperado:** el préstamo se rechaza y la cámara no se cuenta como disponible en el catálogo.
-
-#### RN07. Consecuencias de una incidencia grave o una pérdida
-
-Al registrar una incidencia de gravedad Grave, el artículo pasa automáticamente a En reparación y el solicitante responsable recibe una penalización de 30 días. Si la gravedad es Pérdida, el artículo pasa a De baja y la penalización es de 90 días.
-
-**Prueba de aceptación**
-
-- **Situación inicial:** unas gafas de realidad virtual se devuelven con la lente rota.
-- **Acción:** el técnico registra una incidencia de gravedad Grave.
-- **Resultado esperado:** las gafas pasan a En reparación y el solicitante recibe una penalización de 30 días.
-
-#### RN08. Antelación máxima de las reservas
-
-No se puede reservar con más de 14 días de antelación, para evitar que los equipos queden bloqueados durante semanas por reservas hechas «por si acaso».
-
-**Prueba de aceptación**
-
-- **Situación inicial:** hoy es 8 de octubre.
-- **Acción:** un solicitante intenta reservar un portátil para recogerlo el 30 de octubre.
-- **Resultado esperado:** la reserva se rechaza, ya que solo se admiten reservas con recogida hasta el 22 de octubre.
-
-#### RN09. Caducidad de reservas no recogidas
-
-Una reserva que no se recoge en las 2 horas siguientes a su hora de recogida pasa a Caducada, nunca llega a ser préstamo y el artículo queda libre para otros. Si un solicitante acumula 3 reservas caducadas en el mismo cuatrimestre, recibe una penalización de 7 días.
-
-**Prueba de aceptación**
-
-- **Situación inicial:** Ana tiene 2 reservas caducadas en el cuatrimestre actual.
-- **Acción:** no recoge una tercera reserva en las 2 horas siguientes a su hora de recogida.
-- **Resultado esperado:** la reserva pasa a Caducada y Ana recibe una penalización de 7 días.
-
-### 4.2. Mapa de historias de usuario
-
-Los requisitos funcionales se organizan en cuatro actividades, según el usuario que las realiza.
-
-**Explorar el catálogo (solicitante).** Agrupa las consultas que el solicitante hace antes de pedir material: consultar el catálogo por categorías (RF01) y consultar la disponibilidad de un modelo en unas fechas (RF02).
-
-**Seguir mi actividad (solicitante).** Agrupa las consultas sobre el propio solicitante, siguiendo el recorrido del material: lo que va a recoger, es decir, sus reservas pendientes (RF03); lo que tiene ahora, es decir, sus préstamos en curso (RF04); lo que ya devolvió, es decir, su historial (RF05); y su situación de penalización (RF06).
-
-**Atender el mostrador (técnico).** Agrupa las consultas del trabajo diario en el mostrador: préstamos vencidos (RF07), agenda del día (RF08), historial de un artículo (RF09) y artículos fuera de servicio (RF10).
-
-**Supervisar el servicio (técnico).** Agrupa las consultas para revisar y planificar el servicio: solicitantes penalizados (RF11), modelos más demandados (RF12) e inventario por estado y categoría (RF13).
-
-### 4.3. Requisitos no funcionales
+### 4.5. Requisitos no funcionales
 
 #### RNF01. Tiempo de respuesta
 
@@ -362,33 +366,174 @@ Como **usuario** quiero iniciar sesión con mi UVUS, sin crear otra contraseña,
 
 Como **solicitante** quiero que la aplicación se adapte a la pantalla del móvil, para poder reservar desde cualquier sitio.
 
--- fin entregable 1 --
+---
 
 ## 5. Modelo conceptual
 
-### 5.1. Diagramas de clases UML
+### 5.1. Diagrama de clases UML
 
-<img width="3396" height="3420" alt="diagrama de clases drawio" src="https://github.com/user-attachments/assets/251c482c-a251-410b-9cd5-7d782c70608b" />
+```mermaid
+classDiagram
+direction TB
 
+class Usuario {
+  <<abstract>>
+  uvus : String
+  dni : String
+  nombre : String
+  apellidos : String
+  email : String
+  telefono : String [0..1]
+  fechaAlta : Date
+}
+class Solicitante {
+  <<abstract>>
+  /penalizado : Boolean
+  /numActivos : Integer
+}
+class Estudiante
+class PDI
+class Tecnico
+class Categoria {
+  nombre : String
+  descripcion : String
+}
+class Modelo {
+  marca : String
+  nombreComercial : String
+  descripcion : String
+  especificaciones : String
+  fotografia : String
+  /unidadesDisponibles : Integer
+}
+class Articulo {
+  codigoInventario : String
+  numeroSerie : String
+  fechaAdquisicion : Date
+  precioCompra : Double
+  ubicacion : String
+  estado : EstadoArticulo
+}
+class Reserva {
+  fechaCreacion : DateTime
+  fechaRecogida : DateTime
+  fechaDevolucionPrevista : DateTime
+  estado : EstadoReserva
+}
+class Prestamo {
+  fechaEntrega : DateTime
+  fechaLimite : DateTime
+  fechaDevolucion : DateTime [0..1]
+  estadoVuelta : EstadoVuelta [0..1]
+  /diasRetraso : Integer
+}
+class Incidencia {
+  fecha : DateTime
+  descripcion : String
+  foto : String [0..1]
+  gravedad : Gravedad
+  costeEstimado : Double [0..1]
+  estado : EstadoIncidencia
+}
+class Penalizacion {
+  motivo : MotivoPenalizacion
+  fechaInicio : Date
+  fechaFin : Date
+  /activa : Boolean
+}
 
+note for Usuario "complete, disjoint en ambas generalizaciones<br/>R1: uvus único<br/>R2: dni único<br/>R3: dni = 8 cifras + letra, o X/Y/Z + 7<br/>  cifras + letra<br/>R4: email de Estudiante termina en<br/>  @alum.us.es, el de PDI y Tecnico en @us.es"
+note for Solicitante "R22: numActivos ≤ 2 (Estudiante) y ≤ 4 (PDI)<br/>R24: sin reservas ni préstamos creados<br/>  durante una penalización activa<br/>/penalizado = tiene alguna penalización<br/>  activa<br/>/numActivos = reservas PENDIENTE + préstamos<br/>  sin fechaDevolucion"
+note for Categoria "R5: nombre único<br/>R32: no se elimina si tiene modelos"
+note for Modelo "R6: marca y nombreComercial es único<br/>/unidadesDisponibles = nº de artículos en<br/>  estado DISPONIBLE"
+note for Articulo "R7, R8: codigoInventario y numeroSerie únicos<br/>R9: fechaAdquisicion ≤ hoy · R10: precioCompra > 0<br/>R27: EN_REVISION, EN_REPARACION o DE_BAJA no se reserva ni se presta<br/>R36: solo se presta si DISPONIBLE; con préstamo en curso, PRESTADO<br/>(salvo baja por pérdida)<br/>R37: al darse de alta, DISPONIBLE · R38: DE_BAJA es estado final"
+note for Reserva "R11: fechaRecogida ≥ fechaCreacion<br/>R12: fechaDevolucionPrevista > fechaRecogida<br/>R13: al crearse, estado = PENDIENTE<br/>R14: estado = RECOGIDA si y solo si se tiene<br/>  préstamo<br/>R23: fechaDevolucionPrevista - fechaRecogida<br/>  no supera la duración máxima (ver<br/>  Prestamo)<br/>R26: sin solapamiento con otra reserva<br/>  pendiente o préstamo en curso del mismo<br/>  artículo<br/>R30: fechaRecogida ≤ fechaCreacion + 14 días<br/>R31: PENDIENTE pasa a CADUCADA a las 2 h sin<br/>  recoger, 3 caducadas en el cuatrimestre =<br/>  7 días de penalización<br/>R33: su préstamo es del mismo solicitante y<br/>  del mismo artículo que la reserva"
+note for Prestamo "Clase de asociación de Solicitante-Articulo<br/>  (toma prestado)<br/>R15: fechaLimite > fechaEntrega<br/>R16: fechaDevolucion ≥ fechaEntrega<br/>R17: estadoVuelta y técnico que recoge solo<br/>  si hay fechaDevolucion<br/>R23: duración máx. 3 días (Estudiante) y 7<br/>  (PDI), 24 h si el modelo es de Realidad<br/>  Virtual<br/>R25: devuelto tarde = penalización RETRASO<br/>  de 2 días por día de retraso (máx 60), si<br/>  ya estaba penalizado empieza al terminar<br/>  la anterior<br/>R28: al devolverse, el artículo pasa a<br/>  EN_REVISION<br/>/diasRetraso = días (o fracción) entre<br/>  fechaLimite y fechaDevolucion, o hoy si no<br/>  se ha devuelto, 0 si no hay retraso"
+note for Incidencia "R18: costeEstimado ≥ 0<br/>R19: fecha ≥ fechaEntrega del préstamo<br/>  asociado<br/>R29: GRAVE = artículo EN_REPARACION + 30<br/>  días, PERDIDA = artículo DE_BAJA + 90 días<br/>R34: si tiene préstamo, es del mismo<br/>  artículo"
+note for Penalizacion "R20: fechaFin > fechaInicio<br/>R21: RETRASO solo a un préstamo,<br/>  INCIDENCIA_GRAVE_O_PERDIDA solo a una<br/>  incidencia, RESERVAS_NO_RECOGIDAS a<br/>  ninguno de los dos<br/>R35: el sancionado es el solicitante del<br/>  préstamo que la origina (directamente o a<br/>  través de la incidencia)<br/>/activa = fechaFin > hoy y no ha sido<br/>  levantada"
+Solicitante "0..*" -- "0..*" Articulo : toma prestado
+Usuario <|-- Solicitante
+Usuario <|-- Tecnico
+Solicitante <|-- Estudiante
+Solicitante <|-- PDI
 
-#### Decisiones de diseño
+Categoria "1" -- "0..*" Modelo : clasifica
+Modelo "1" -- "1..*" Articulo : agrupa
+Solicitante "1" -- "0..*" Reserva : realiza
+Articulo "1" -- "0..*" Reserva : se asigna a
+Reserva "0..1" -- "0..1" Prestamo : se convierte en
+Tecnico "1" -- "0..*" Prestamo : entrega
+Tecnico "0..1" -- "0..*" Prestamo : recoge
+Articulo "1" -- "0..*" Incidencia : afecta a
+Prestamo "0..1" -- "0..*" Incidencia : se detecta en
+Tecnico "1" -- "0..*" Incidencia : registra
+Solicitante "1" -- "0..*" Penalizacion : recibe
+Prestamo "0..1" -- "0..1" Penalizacion : origina
+Incidencia "0..1" *-- "0..1" Penalizacion : origina
+Tecnico "0..1" -- "0..*" Penalizacion : levanta
 
-Los usuarios se representan mediante herencia. Usuario es una clase abstracta de la que heredan Solicitante, también abstracta, y Tecnico; de Solicitante heredan Estudiante y PDI. Ambas generalizaciones son completas y disjuntas: todo usuario pertenece exactamente a una de las clases hijas. Se ha elegido esta opción porque el técnico no pide material, por lo que no puede tener reservas, préstamos ni penalizaciones, y porque el estudiante y el PDI tienen límites distintos de préstamos y de duración (RN01 y RN02). Por ello, el tipo de usuario del RI01 no aparece como atributo, sino que lo determina la clase a la que pertenece cada objeto.
+class EstadoArticulo {
+  <<enumeration>>
+  DISPONIBLE
+  PRESTADO
+  EN_REVISION
+  EN_REPARACION
+  DE_BAJA
+}
+class EstadoReserva {
+  <<enumeration>>
+  PENDIENTE
+  RECOGIDA
+  CANCELADA
+  CADUCADA
+}
+class EstadoVuelta {
+  <<enumeration>>
+  CORRECTO
+  CON_DAÑOS
+}
+class Gravedad {
+  <<enumeration>>
+  LEVE
+  GRAVE
+  PERDIDA
+}
+class EstadoIncidencia {
+  <<enumeration>>
+  ABIERTA
+  EN_REPARACION
+  RESUELTA
+  BAJA_DEFINITIVA
+}
+class MotivoPenalizacion {
+  <<enumeration>>
+  RETRASO
+  INCIDENCIA_GRAVE_O_PERDIDA
+  RESERVAS_NO_RECOGIDAS
+}
+```
 
-Reserva y Préstamo son clases distintas porque representan momentos distintos: la reserva es un compromiso para recoger un artículo en el futuro y el préstamo es el periodo en que el solicitante tiene el artículo en su poder. Se relacionan con multiplicidad 0..1 en ambos extremos, porque una reserva puede cancelarse o caducar sin llegar a ser préstamo, y un préstamo puede hacerse en el mostrador sin reserva previa.
+#### 5.1.1. Decisiones de diseño
 
-El catálogo no se representa como una clase porque es único y consiste en el conjunto de todos los modelos agrupados por categoría.
+**Herencia de usuarios.** Usuario es una clase abstracta de la que heredan Solicitante, también abstracta, y Tecnico; de Solicitante heredan Estudiante y PDI. Ambas generalizaciones son completas y disjuntas: todo usuario pertenece exactamente a una de las clases hijas. Se ha elegido esta opción porque el técnico no pide material, por lo que no puede tener reservas, préstamos ni penalizaciones, y porque el estudiante y el PDI tienen límites distintos de préstamos y de duración (RN01 y RN02). Por ello, el tipo de usuario del RI01 no aparece como atributo, sino que lo determina la clase a la que pertenece cada objeto.
 
-#### Reglas de derivación
+**Reserva y Préstamo.** Son clases distintas porque representan momentos distintos: la reserva es un compromiso para recoger un artículo en el futuro y el préstamo es el periodo en que el solicitante tiene el artículo en su poder. Se relacionan con multiplicidad 0..1 en ambos extremos, porque una reserva puede cancelarse o caducar sin llegar a ser préstamo, y un préstamo puede hacerse en el mostrador sin reserva previa.
 
-- **Solicitante./penalizado:** es verdadero si el solicitante tiene alguna penalización activa.
-- **Solicitante./numActivos:** número de reservas en estado PENDIENTE más número de préstamos sin fecha de devolución del solicitante.
-- **Modelo./unidadesDisponibles:** número de artículos del modelo en estado DISPONIBLE.
-- **Prestamo./diasRetraso:** días, contando cada fracción como un día completo, entre la fecha límite y la fecha de devolución o, si no se ha devuelto, la fecha actual. Vale 0 si no hay retraso.
-- **Penalizacion./activa:** es verdadero si la fecha de fin es posterior a la fecha actual y la penalización no ha sido levantada por un técnico.
+**Asociación de muchos a muchos.** Un solicitante puede tomar prestados muchos artículos a lo largo del tiempo y un artículo puede prestarse a muchos solicitantes, por lo que Solicitante y Articulo se relacionan con multiplicidad 0..* en ambos extremos. Los datos de cada vez que se produce esa relación (fechas, técnicos que entregan y recogen, estado de vuelta) pertenecen a la asociación y no a ninguno de los dos extremos, así que se guardan en la clase de asociación Prestamo. Por eso en los diagramas de objetos cada préstamo se enlaza con su solicitante y con su artículo.
 
-#### Restricciones
+**Composición entre Incidencia y Penalizacion.** La penalización por incidencia grave o pérdida no tiene sentido sin la incidencia que la origina: nace al registrarla (R29) y desaparece si la incidencia se elimina. Por eso se modela como composición, con el rombo en Incidencia. La multiplicidad en el extremo del todo es 0..1 porque las penalizaciones por retraso y por reservas no recogidas existen sin incidencia (R21).
+
+**Catálogo.** No se representa como una clase porque es único y consiste en el conjunto de todos los modelos agrupados por categoría.
+
+#### 5.1.2. Reglas de derivación
+
+- **/penalizado (Solicitante):** es verdadero si el solicitante tiene alguna penalización activa.
+- **/numActivos (Solicitante):** número de reservas en estado PENDIENTE más número de préstamos sin fecha de devolución del solicitante.
+- **/unidadesDisponibles (Modelo):** número de artículos del modelo en estado DISPONIBLE.
+- **/diasRetraso (Prestamo):** días, contando cada fracción como un día completo, entre la fecha límite y la fecha de devolución o, si no se ha devuelto, la fecha actual. Vale 0 si no hay retraso.
+- **/activa (Penalizacion):** es verdadero si la fecha de fin es posterior a la fecha actual y la penalización no ha sido levantada por un técnico (es decir, no está enlazada con ningún técnico mediante «levanta»).
+
+#### 5.1.3. Restricciones
 
 - **R1 (RI01).** El uvus de un usuario es único.
 - **R2 (RI01).** El dni de un usuario es único.
@@ -410,11 +555,11 @@ El catálogo no se representa como una clase porque es único y consiste en el c
 - **R18 (RI06).** El coste estimado de una incidencia, si existe, es mayor o igual que 0.
 - **R19 (RI06).** La fecha de una incidencia asociada a un préstamo no es anterior a la fecha de entrega de ese préstamo.
 - **R20 (RI07).** La fecha de fin de una penalización es posterior a su fecha de inicio.
-- **R21 (RI07).** Una penalización con motivo RETRASO está asociada solo a un préstamo; una con motivo INCIDENCIA_GRAVE_O_PERDIDA, solo a una incidencia; y una con motivo RESERVAS_NO_RECOGIDAS, a ninguno de los dos.
+- **R21 (RI07).** Una penalización con motivo RETRASO está asociada solo a un préstamo; una con motivo INCIDENCIA_GRAVE_O_PERDIDA, solo a una incidencia, de la que forma parte (composición); y una con motivo RESERVAS_NO_RECOGIDAS, a ninguno de los dos.
 - **R22 (RN01).** Un estudiante no puede sumar más de 2 reservas pendientes y préstamos en curso; un PDI, no más de 4.
 - **R23 (RN02).** Ni la duración de un préstamo (de la fecha de entrega a la fecha límite) ni la de una reserva (de la fecha de recogida a la fecha prevista de devolución) pueden superar 3 días para un estudiante o 7 días para un PDI. Si el modelo del artículo pertenece a la categoría Realidad Virtual, el máximo es de 24 horas para cualquier solicitante.
 - **R24 (RN03).** Un solicitante no puede tener reservas ni préstamos creados mientras tiene una penalización activa.
-- **R25 (RN04).** Un préstamo devuelto después de su fecha límite origina una penalización con motivo RETRASO de 2 días por cada día de retraso, con un máximo de 60 días. Si el solicitante ya tenía una penalización activa, la nueva comienza cuando termina la anterior.
+- **R25 (RN04).** Un préstamo devuelto después de su fecha límite origina una penalización con motivo RETRASO de 2 días por cada día de retraso (/diasRetraso), con un máximo de 60 días. Si el solicitante ya tenía una penalización activa, la nueva comienza cuando termina la anterior.
 - **R26 (RN05).** Dos reservas pendientes o préstamos en curso del mismo artículo no pueden tener periodos que se solapen.
 - **R27 (RN06).** Un artículo en estado EN_REVISION, EN_REPARACION o DE_BAJA no puede asignarse a una reserva nueva ni a un préstamo nuevo.
 - **R28 (RN06).** Al registrarse la devolución de un préstamo, su artículo pasa a estado EN_REVISION.
@@ -425,299 +570,281 @@ El catálogo no se representa como una clase porque es único y consiste en el c
 - **R33 (RI04, RI05).** El préstamo en que se convierte una reserva pertenece al mismo solicitante y al mismo artículo que la reserva.
 - **R34 (RI06).** Una incidencia asociada a un préstamo afecta al mismo artículo de ese préstamo.
 - **R35 (RI07, RN04, RN07).** La penalización originada por un préstamo, o por una incidencia asociada a un préstamo, sanciona al solicitante de ese préstamo.
-- **R36 (apartado 2.1, RN06).** Un artículo solo puede entregarse en préstamo si está en estado DISPONIBLE, y mientras tiene un préstamo en curso su estado es PRESTADO.
-- **R37 (apartado 2.1).** Todo artículo se da de alta en estado DISPONIBLE.
-- **R38 (apartado 2.1).** DE_BAJA es un estado final: un artículo dado de baja no puede cambiar a ningún otro estado.
-
+- **R36 (apartado 2.1, RN06).** Un artículo solo puede entregarse en préstamo si está en estado DISPONIBLE, y mientras tiene un préstamo en curso su estado es PRESTADO, salvo que se haya dado de baja por pérdida (R29).
+- **R37 (RI03, apartado 2.1).** Todo artículo se da de alta en estado DISPONIBLE.
+- **R38 (RI03, apartado 2.1).** DE_BAJA es un estado final: un artículo dado de baja no puede cambiar a ningún otro estado.
 
 ### 5.2. Escenarios de prueba
-**Caso 1.-** Ramirez Soria, estudiante con uvus PKN3387, decide formular una reserva el día 1 de Octubre de 2026 de una cámara Canon EOS R50, para el día siguiente.
 
-<img width="1192" height="923" alt="image" src="https://github.com/user-attachments/assets/f510946c-e363-4fad-8006-11fe275dd34b" />
+#### Caso 1. Reserva de una cámara
 
-**Caso 2.-** Ramirez Soria, estudiante con uvus PKN3387, recoge la Cámara que reservo el día anterior del técnico Gutierrez Asencio, quien organiza todo el resto y crea la instancia del prestamo en los datos, actualizando el estado del articulo, la reserva...
+**Descripción.** El 1 de octubre de 2026, Paula Ramírez Soria, estudiante con UVUS PKN3387, reserva una cámara Canon EOS R50 para recogerla al día siguiente y devolverla el 4 de octubre. El modelo tiene dos artículos libres, CAM-005 y CAM-006, y el sistema asigna el CAM-005. La reserva se crea Pendiente y no cambia el estado del artículo.
 
-<img width="1069" height="1042" alt="image" src="https://github.com/user-attachments/assets/a44dd1ce-6827-414d-bcef-668e2f4fd444" />
+```mermaid
+classDiagram
+direction TB
 
+class pkn3387["pkn3387 : Estudiante"] {
+  uvus = PKN3387
+  dni = 80564127A
+  nombre = Paula
+  apellidos = Ramírez Soria
+  email = pramsor@alum.us.es
+  telefono = 685723460
+  fechaAlta = 2026-09-20
+  /penalizado = false
+  /numActivos = 1
+}
+class r1["r1 : Reserva"] {
+  fechaCreacion = 2026-10-01 10:15
+  fechaRecogida = 2026-10-02 11:00
+  fechaDevolucionPrevista = 2026-10-04 11:00
+  estado = PENDIENTE
+}
+class cam005["cam005 : Articulo"] {
+  codigoInventario = CAM-005
+  numeroSerie = 7659
+  fechaAdquisicion = 2025-07-15
+  precioCompra = 779.00
+  ubicacion = Almacén
+  estado = DISPONIBLE
+}
+class cam006["cam006 : Articulo"] {
+  codigoInventario = CAM-006
+  numeroSerie = 7660
+  fechaAdquisicion = 2025-07-15
+  precioCompra = 779.00
+  ubicacion = Almacén
+  estado = DISPONIBLE
+}
+class r50["r50 : Modelo"] {
+  marca = Canon
+  nombreComercial = EOS R50
+  descripcion = Cámara mirrorless compacta para foto y vídeo
+  especificaciones = Montura RF, 24,2 MP, vídeo 4K
+  fotografia = canon-eos-r50.jpg
+  /unidadesDisponibles = 2
+}
+class audiovisual["audiovisual : Categoria"] {
+  nombre = Audiovisual
+  descripcion = Cámaras, proyectores y equipos de grabación
+}
 
-**Caso 3.-** El PDI Águilar Ramos devuelve un proyector el Día 10, antes de la fecha prevista, con daños. El técnico Gutierrez Asencio nota que el articulo prestado, un proyector, está dañado. El técnico Gutierrez anota la incidencia, cambia el estado del y origina la penalización al PDI.
+pkn3387 -- r1 : realiza
+r1 -- cam005 : se asigna a
+cam005 -- r50 : agrupa
+cam006 -- r50 : agrupa
+r50 -- audiovisual : clasifica
+```
 
-<img width="1281" height="1152" alt="image" src="https://github.com/user-attachments/assets/b44e7a7f-ad64-45ba-b34a-97acf85eb81a" />
+#### Caso 2. Recogida de la cámara y comienzo del préstamo
 
+**Descripción.** El 2 de octubre de 2026, Paula Ramírez Soria acude al mostrador a recoger la cámara que reservó el día anterior. El técnico Javier Gutierrez Asencio le entrega el CAM-005 y registra el préstamo: la reserva pasa a Recogida, se crea el préstamo con la fecha límite del 4 de octubre y el artículo pasa a Prestado.
 
+```mermaid
+classDiagram
+direction TB
 
-## 6. Matrices de trazabilidad
+class pkn3387["pkn3387 : Estudiante"] {
+  uvus = PKN3387
+  dni = 80564127A
+  nombre = Paula
+  apellidos = Ramírez Soria
+  email = pramsor@alum.us.es
+  telefono = 685723460
+  fechaAlta = 2026-09-20
+  /penalizado = false
+  /numActivos = 1
+}
+class jpr3240["jpr3240 : Tecnico"] {
+  uvus = JPR3240
+  dni = 65374419R
+  nombre = Javier
+  apellidos = Gutierrez Asencio
+  email = jgutase@us.es
+  telefono = 662370204
+  fechaAlta = 2015-03-14
+}
+class r1["r1 : Reserva"] {
+  fechaCreacion = 2026-10-01 10:15
+  fechaRecogida = 2026-10-02 11:00
+  fechaDevolucionPrevista = 2026-10-04 11:00
+  estado = RECOGIDA
+}
+class p1["p1 : Prestamo"] {
+  fechaEntrega = 2026-10-02 11:05
+  fechaLimite = 2026-10-04 11:00
+  fechaDevolucion = null
+  estadoVuelta = null
+  /diasRetraso = 0
+}
+class cam005["cam005 : Articulo"] {
+  codigoInventario = CAM-005
+  numeroSerie = 7659
+  fechaAdquisicion = 2025-07-15
+  precioCompra = 779.00
+  ubicacion = Almacén
+  estado = PRESTADO
+}
+class cam006["cam006 : Articulo"] {
+  codigoInventario = CAM-006
+  numeroSerie = 7660
+  fechaAdquisicion = 2025-07-15
+  precioCompra = 779.00
+  ubicacion = Almacén
+  estado = DISPONIBLE
+}
+class r50["r50 : Modelo"] {
+  marca = Canon
+  nombreComercial = EOS R50
+  descripcion = Cámara mirrorless compacta para foto y vídeo
+  especificaciones = Montura RF, 24,2 MP, vídeo 4K
+  fotografia = canon-eos-r50.jpg
+  /unidadesDisponibles = 1
+}
+class audiovisual["audiovisual : Categoria"] {
+  nombre = Audiovisual
+  descripcion = Cámaras, proyectores y equipos de grabación
+}
 
-Las siguientes matrices relacionan los requisitos de información y las reglas de negocio del apartado 4 con las clases, asociaciones y restricciones del modelo conceptual del apartado 5. Se marca una **X** cuando un elemento del modelo interviene en el requisito correspondiente. Las celdas vacías indican que no existe una relación directa.
+pkn3387 -- r1 : realiza
+r1 -- cam005 : se asigna a
+r1 -- p1 : se convierte en
+pkn3387 -- p1 : toma prestado
+p1 -- cam005 : se presta en
+jpr3240 -- p1 : entrega
+cam005 -- r50 : agrupa
+cam006 -- r50 : agrupa
+r50 -- audiovisual : clasifica
+```
 
-### 6.1. Clases del modelo conceptual
+#### Caso 3. Devolución con daños de un proyector
 
-Se han separado las clases de usuarios de las que representan el material y su gestión para que las tablas sean más fáciles de leer.
+**Descripción.** El PDI Marta Aguilar Ramos (UVUS JAP2031) recogió el 8 de octubre de 2026 un proyector Epson EB-L210SW directamente en el mostrador, sin reserva previa, con fecha límite el 13 de octubre. Lo devuelve el 10 de octubre, antes de la fecha límite, y el técnico Javier Gutierrez Asencio comprueba que la óptica está dañada. Registra una incidencia de gravedad Grave, el proyector pasa a En reparación y el sistema crea una penalización de 30 días para el PDI.
 
-#### 6.1.1. Usuarios
+```mermaid
+classDiagram
+direction TB
 
-| Requisito | Usuario | Solicitante | Estudiante | PDI | Tecnico |
-|:---|:---:|:---:|:---:|:---:|:---:|
-| RI01 | X | X | X | X | X |
-| RI02 |   |   |   |   |   |
-| RI03 |   |   |   |   |   |
-| RI04 |   | X |   |   |   |
-| RI05 |   | X |   |   | X |
-| RI06 |   |   |   |   | X |
-| RI07 |   | X |   |   | X |
-| RN01 |   | X | X | X |   |
-| RN02 |   | X | X | X |   |
-| RN03 |   | X |   |   |   |
-| RN04 |   | X |   |   |   |
-| RN05 |   |   |   |   |   |
-| RN06 |   |   |   |   |   |
-| RN07 |   | X |   |   |   |
-| RN08 |   |   |   |   |   |
-| RN09 |   | X |   |   |   |
+class jap2031["jap2031 : PDI"] {
+  uvus = JAP2031
+  dni = 56367868C
+  nombre = Marta
+  apellidos = Aguilar Ramos
+  email = aguilarramos@us.es
+  telefono = 623119981
+  fechaAlta = 2005-07-12
+  /penalizado = true
+  /numActivos = 0
+}
+class jpr3240["jpr3240 : Tecnico"] {
+  uvus = JPR3240
+  dni = 65374419R
+  nombre = Javier
+  apellidos = Gutierrez Asencio
+  email = jgutase@us.es
+  telefono = 662370204
+  fechaAlta = 2015-03-14
+}
+class p2["p2 : Prestamo"] {
+  fechaEntrega = 2026-10-08 10:00
+  fechaLimite = 2026-10-13 10:00
+  fechaDevolucion = 2026-10-10 12:30
+  estadoVuelta = CON_DAÑOS
+  /diasRetraso = 0
+}
+class i1["i1 : Incidencia"] {
+  fecha = 2026-10-10 12:45
+  descripcion = Óptica dañada
+  foto = null
+  gravedad = GRAVE
+  costeEstimado = null
+  estado = EN_REPARACION
+}
+class pen1["pen1 : Penalizacion"] {
+  motivo = INCIDENCIA_GRAVE_O_PERDIDA
+  fechaInicio = 2026-10-10
+  fechaFin = 2026-11-09
+  /activa = true
+}
+class pry001["pry001 : Articulo"] {
+  codigoInventario = PRY-001
+  numeroSerie = 5678-7761
+  fechaAdquisicion = 2022-04-15
+  precioCompra = 559.00
+  ubicacion = Taller de reparación
+  estado = EN_REPARACION
+}
+class pry002["pry002 : Articulo"] {
+  codigoInventario = PRY-002
+  numeroSerie = 5678-7762
+  fechaAdquisicion = 2022-04-15
+  precioCompra = 559.00
+  ubicacion = Almacén
+  estado = DISPONIBLE
+}
+class l210["l210 : Modelo"] {
+  marca = Epson
+  nombreComercial = EB-L210SW
+  descripcion = Proyector láser de corta distancia con alta luminosidad
+  especificaciones = WXGA, 4.500 lúmenes, láser
+  fotografia = epson-eb-l210sw.jpg
+  /unidadesDisponibles = 1
+}
+class audiovisual["audiovisual : Categoria"] {
+  nombre = Audiovisual
+  descripcion = Cámaras, proyectores y equipos de grabación
+}
 
-#### 6.1.2. Catálogo, artículos y gestión de préstamos
+jap2031 -- p2 : toma prestado
+p2 -- pry001 : se presta en
+jpr3240 -- p2 : entrega
+jpr3240 -- p2 : recoge
+jpr3240 -- i1 : registra
+i1 -- p2 : se detecta en
+i1 -- pry001 : afecta a
+i1 *-- pen1 : origina
+jap2031 -- pen1 : recibe
+pry001 -- l210 : agrupa
+pry002 -- l210 : agrupa
+l210 -- audiovisual : clasifica
+```
 
-| Requisito | Categoria | Modelo | Articulo | Reserva | Prestamo | Incidencia | Penalizacion |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| RI01 |   |   |   |   |   |   |   |
-| RI02 | X | X |   |   |   |   |   |
-| RI03 |   | X | X |   |   |   |   |
-| RI04 |   |   | X | X |   |   |   |
-| RI05 |   |   | X | X | X |   |   |
-| RI06 |   |   | X |   | X | X |   |
-| RI07 |   |   |   |   | X | X | X |
-| RN01 |   |   |   | X | X |   |   |
-| RN02 | X | X | X | X | X |   |   |
-| RN03 |   |   |   | X | X |   | X |
-| RN04 |   |   |   |   | X |   | X |
-| RN05 |   |   | X | X | X |   |   |
-| RN06 |   |   | X | X | X |   |   |
-| RN07 |   |   | X |   | X | X | X |
-| RN08 |   |   |   | X |   |   |   |
-| RN09 |   |   |   | X |   |   | X |
+---
 
-#### 6.1.3. Generalizaciones
+## 6. Matriz de trazabilidad
 
-El modelo distingue entre solicitantes y técnicos, y dentro de los solicitantes entre estudiantes y PDI. Estas diferencias son necesarias para identificar el tipo de usuario y aplicar los límites propios de cada uno.
+La matriz relaciona los elementos del modelo conceptual del apartado 5.1 con los requisitos de información (RI), las reglas de negocio (RN) y los requisitos funcionales (RF) del apartado 4. Las filas son las clases y las asociaciones del modelo, identificadas con la letra A; las columnas son los requisitos. Se marca una **X** cuando el elemento interviene en el requisito. Los requisitos no funcionales no aparecen porque no afectan al modelo conceptual.
 
-- **G01:** Usuario y Solicitante.
-- **G02:** Usuario y Tecnico.
-- **G03:** Solicitante y Estudiante.
-- **G04:** Solicitante y PDI.
-
-| Requisito | G01 | G02 | G03 | G04 |
-|:---|:---:|:---:|:---:|:---:|
-| RI01 | X | X | X | X |
-| RI02 |   |   |   |   |
-| RI03 |   |   |   |   |
-| RI04 |   |   |   |   |
-| RI05 |   |   |   |   |
-| RI06 |   |   |   |   |
-| RI07 |   |   |   |   |
-| RN01 |   |   | X | X |
-| RN02 |   |   | X | X |
-| RN03 |   |   |   |   |
-| RN04 |   |   |   |   |
-| RN05 |   |   |   |   |
-| RN06 |   |   |   |   |
-| RN07 |   |   |   |   |
-| RN08 |   |   |   |   |
-| RN09 |   |   |   |   |
-
-#### 6.1.4. Atributos derivados
-
-También se relacionan los atributos derivados del apartado 5.1 con las reglas de negocio en las que se utilizan.
-
-- **D01:** Solicitante./penalizado.
-- **D02:** Solicitante./numActivos.
-- **D03:** Modelo./unidadesDisponibles.
-- **D04:** Prestamo./diasRetraso.
-- **D05:** Penalizacion./activa.
-
-| Requisito | D01 | D02 | D03 | D04 | D05 |
-|:---|:---:|:---:|:---:|:---:|:---:|
-| RI01 |   |   |   |   |   |
-| RI02 |   |   |   |   |   |
-| RI03 |   |   |   |   |   |
-| RI04 |   |   |   |   |   |
-| RI05 |   |   |   |   |   |
-| RI06 |   |   |   |   |   |
-| RI07 |   |   |   |   |   |
-| RN01 |   | X |   |   |   |
-| RN02 |   |   |   |   |   |
-| RN03 | X |   |   |   | X |
-| RN04 |   |   |   | X | X |
-| RN05 |   |   |   |   |   |
-| RN06 |   |   | X |   |   |
-| RN07 |   |   |   |   |   |
-| RN08 |   |   |   |   |   |
-| RN09 |   |   |   |   |   |
-
-### 6.2. Asociaciones del modelo conceptual
-
-Las asociaciones permiten relacionar cada artículo con su modelo, las reservas y préstamos con sus solicitantes y las incidencias o penalizaciones con su origen. Se identifican con la letra A para que puedan consultarse en las tablas sin repetir los nombres completos.
-
-- **A01:** Categoria y Modelo.
-- **A02:** Modelo y Articulo.
-- **A03:** Solicitante y Reserva.
-- **A04:** Articulo y Reserva.
-- **A05:** Solicitante y Prestamo.
-- **A06:** Articulo y Prestamo.
-- **A07:** Reserva y Prestamo.
-- **A08:** Tecnico y Prestamo, por la entrega.
-- **A09:** Tecnico y Prestamo, por la recogida.
-- **A10:** Articulo e Incidencia.
-- **A11:** Prestamo e Incidencia.
-- **A12:** Tecnico e Incidencia.
-- **A13:** Solicitante y Penalizacion.
-- **A14:** Prestamo y Penalizacion.
-- **A15:** Incidencia y Penalizacion.
-- **A16:** Tecnico y Penalizacion, por su levantamiento.
-
-#### 6.2.1. Asociaciones A01 a A08
-
-| Requisito | A01 | A02 | A03 | A04 | A05 | A06 | A07 | A08 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| RI01 |   |   |   |   |   |   |   |   |
-| RI02 | X |   |   |   |   |   |   |   |
-| RI03 |   | X |   |   |   |   |   |   |
-| RI04 |   |   | X | X |   |   | X |   |
-| RI05 |   |   |   |   | X | X | X | X |
-| RI06 |   |   |   |   |   |   |   |   |
-| RI07 |   |   |   |   |   |   |   |   |
-| RN01 |   |   | X |   | X |   |   |   |
-| RN02 | X | X | X | X | X | X |   |   |
-| RN03 |   |   | X |   | X |   |   |   |
-| RN04 |   |   |   |   | X |   |   |   |
-| RN05 |   |   |   | X |   | X |   |   |
-| RN06 |   |   |   | X |   | X |   |   |
-| RN07 |   |   |   |   | X | X |   |   |
-| RN08 |   |   |   |   |   |   |   |   |
-| RN09 |   |   | X |   |   |   |   |   |
-
-
-#### 6.2.2. Asociaciones A09 a A16
-
-| Requisito | A09 | A10 | A11 | A12 | A13 | A14 | A15 | A16 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| RI01 |   |   |   |   |   |   |   |   |
-| RI02 |   |   |   |   |   |   |   |   |
-| RI03 |   |   |   |   |   |   |   |   |
-| RI04 |   |   |   |   |   |   |   |   |
-| RI05 | X |   |   |   |   |   |   |   |
-| RI06 |   | X | X | X |   |   |   |   |
-| RI07 |   |   |   | X | X | X | X | X |
-| RN01 |   |   |   |   |   |   |   |   |
-| RN02 |   |   |   |   |   |   |   |   |
-| RN03 |   |   |   |   | X |   |   |   |
-| RN04 |   |   |   |   | X | X |   |   |
-| RN05 |   |   |   |   |   |   |   |   |
-| RN06 |   |   |   |   |   |   |   |   |
-| RN07 |   | X | X |   | X |   | X |   |
-| RN08 |   |   |   |   |   |   |   |   |
-| RN09 |   |   |   |   | X |   |   |   |
-
-
-### 6.3. Restricciones del modelo conceptual
-
-Las restricciones R1 a R38 están descritas en el apartado 5.1. En estas tablas se indica qué requisito de información o regla de negocio justifica cada una.
-
-#### 6.3.1. Restricciones R1 a R10
-
-| Requisito | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 | R10 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| RI01 | X | X | X | X |   |   |   |   |   |   |
-| RI02 |   |   |   |   | X | X |   |   |   |   |
-| RI03 |   |   |   |   |   |   | X | X | X | X |
-| RI04 |   |   |   |   |   |   |   |   |   |   |
-| RI05 |   |   |   |   |   |   |   |   |   |   |
-| RI06 |   |   |   |   |   |   |   |   |   |   |
-| RI07 |   |   |   |   |   |   |   |   |   |   |
-| RN01 |   |   |   |   |   |   |   |   |   |   |
-| RN02 |   |   |   |   |   |   |   |   |   |   |
-| RN03 |   |   |   |   |   |   |   |   |   |   |
-| RN04 |   |   |   |   |   |   |   |   |   |   |
-| RN05 |   |   |   |   |   |   |   |   |   |   |
-| RN06 |   |   |   |   |   |   |   |   |   |   |
-| RN07 |   |   |   |   |   |   |   |   |   |   |
-| RN08 |   |   |   |   |   |   |   |   |   |   |
-| RN09 |   |   |   |   |   |   |   |   |   |   |
-
-
-#### 6.3.2. Restricciones R11 a R21
-
-| Requisito | R11 | R12 | R13 | R14 | R15 | R16 | R17 | R18 | R19 | R20 | R21 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| RI01 |   |   |   |   |   |   |   |   |   |   |   |
-| RI02 |   |   |   |   |   |   |   |   |   |   |   |
-| RI03 |   |   |   |   |   |   |   |   |   |   |   |
-| RI04 | X | X | X | X |   |   |   |   |   |   |   |
-| RI05 |   |   |   | X | X | X | X |   |   |   |   |
-| RI06 |   |   |   |   |   |   |   | X | X |   |   |
-| RI07 |   |   |   |   |   |   |   |   |   | X | X |
-| RN01 |   |   |   |   |   |   |   |   |   |   |   |
-| RN02 |   |   |   |   |   |   |   |   |   |   |   |
-| RN03 |   |   |   |   |   |   |   |   |   |   |   |
-| RN04 |   |   |   |   |   |   |   |   |   |   |   |
-| RN05 |   |   |   |   |   |   |   |   |   |   |   |
-| RN06 |   |   |   |   |   |   |   |   |   |   |   |
-| RN07 |   |   |   |   |   |   |   |   |   |   |   |
-| RN08 |   |   |   |   |   |   |   |   |   |   |   |
-| RN09 |   |   |   |   |   |   |   |   |   |   |   |
-
-
-
-#### 6.3.3. Restricciones R22 a R31
-
-| Requisito | R22 | R23 | R24 | R25 | R26 | R27 | R28 | R29 | R30 | R31 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| RI01 |   |   |   |   |   |   |   |   |   |   |
-| RI02 |   |   |   |   |   |   |   |   |   |   |
-| RI03 |   |   |   |   |   |   |   |   |   |   |
-| RI04 |   |   |   |   |   |   |   |   |   |   |
-| RI05 |   |   |   |   |   |   |   |   |   |   |
-| RI06 |   |   |   |   |   |   |   |   |   |   |
-| RI07 |   |   |   |   |   |   |   |   |   |   |
-| RN01 | X |   |   |   |   |   |   |   |   |   |
-| RN02 |   | X |   |   |   |   |   |   |   |   |
-| RN03 |   |   | X |   |   |   |   |   |   |   |
-| RN04 |   |   |   | X |   |   |   |   |   |   |
-| RN05 |   |   |   |   | X |   |   |   |   |   |
-| RN06 |   |   |   |   |   | X | X |   |   |   |
-| RN07 |   |   |   |   |   |   |   | X |   |   |
-| RN08 |   |   |   |   |   |   |   |   | X |   |
-| RN09 |   |   |   |   |   |   |   |   |   | X |
-
-
-#### 6.3.4. Restricciones R32 a R38
-
-| Requisito | R32 | R33 | R34 | R35 | R36 | R37 | R38 |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| RI01 |   |   |   |   |   |   |   |
-| RI02 | X |   |   |   |   |   |   |
-| RI03 |   |   |   |   |   |   |   |
-| RI04 |   | X |   |   |   |   |   |
-| RI05 |   | X |   |   |   |   |   |
-| RI06 |   |   | X |   |   |   |   |
-| RI07 |   |   |   | X |   |   |   |
-| RN01 |   |   |   |   |   |   |   |
-| RN02 |   |   |   |   |   |   |   |
-| RN03 |   |   |   |   |   |   |   |
-| RN04 |   |   |   | X |   |   |   |
-| RN05 |   |   |   |   |   |   |   |
-| RN06 |   |   |   |   | X |   |   |
-| RN07 |   |   |   | X |   |   |   |
-| RN08 |   |   |   |   |   |   |   |
-| RN09 |   |   |   |   |   |   |   |
-
-### 6.4. Revisión de la trazabilidad
-
-Todos los requisitos de información y las reglas de negocio tienen al menos una correspondencia con las clases y restricciones del modelo conceptual.
-
-Las restricciones **R37** y **R38** describen el estado inicial de los artículos y el carácter definitivo del estado DE_BAJA. Ambas se recogen en el ciclo de vida del artículo del apartado 2.1, pero todavía no están asignadas expresamente a un requisito de información o regla de negocio del apartado 4. Por ese motivo, sus columnas se han dejado sin marcar.
-
-
--- fin entregable 2 --
+| Elemento del modelo | RI01 | RI02 | RI03 | RI04 | RI05 | RI06 | RI07 | RN01 | RN02 | RN03 | RN04 | RN05 | RN06 | RN07 | RN08 | RN09 | RF01 | RF02 | RF03 | RF04 | RF05 | RF06 | RF07 | RF08 | RF09 | RF10 | RF11 | RF12 | RF13 |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Usuario** | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **Solicitante** | X |   |   | X | X |   | X | X | X | X | X |   |   | X |   | X |   | X | X | X | X | X | X | X | X |   | X |   |   |
+| **Estudiante** | X |   |   |   |   |   |   | X | X |   |   |   |   |   |   |   |   | X | X |   |   |   |   |   |   |   |   |   |   |
+| **PDI** | X |   |   |   |   |   |   | X | X |   |   |   |   |   |   |   |   | X | X |   |   |   |   |   |   |   |   |   |   |
+| **Tecnico** | X |   |   |   | X | X | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |
+| **Categoria** |   | X |   |   |   |   |   |   | X |   |   |   |   |   |   |   | X | X |   |   |   |   |   |   |   |   |   |   | X |
+| **Modelo** |   | X | X |   |   |   |   |   | X |   |   |   | X |   |   |   | X | X |   |   | X |   |   |   |   |   |   | X | X |
+| **Articulo** |   |   | X | X | X | X |   |   | X |   |   | X | X | X |   |   | X | X | X | X | X |   | X | X | X | X |   | X | X |
+| **Reserva** |   |   |   | X | X |   |   | X | X | X |   | X | X |   | X | X |   | X | X |   |   |   |   | X |   |   |   |   |   |
+| **Prestamo** |   |   |   |   | X | X | X | X | X | X | X | X | X | X |   |   |   | X |   | X | X | X | X | X | X |   |   | X |   |
+| **Incidencia** |   |   |   |   |   | X | X |   |   |   |   |   |   | X |   |   |   |   |   |   | X | X |   |   | X | X |   |   |   |
+| **Penalizacion** |   |   |   |   |   |   | X |   |   | X | X |   |   | X |   | X |   |   |   |   |   | X |   |   |   |   | X |   |   |
+| **A01** Categoria – Modelo (clasifica) |   | X |   |   |   |   |   |   | X |   |   |   |   |   |   |   | X | X |   |   |   |   |   |   |   |   |   |   | X |
+| **A02** Modelo – Articulo (agrupa) |   |   | X |   |   |   |   |   | X |   |   |   | X |   |   |   | X | X |   |   | X |   |   |   |   |   |   | X | X |
+| **A03** Solicitante – Reserva (realiza) |   |   |   | X |   |   |   | X |   | X |   |   |   |   |   | X |   |   | X |   |   |   |   | X |   |   |   |   |   |
+| **A04** Articulo – Reserva (se asigna a) |   |   |   | X |   |   |   |   | X |   |   | X | X |   |   |   |   | X | X |   |   |   |   | X |   |   |   |   |   |
+| **A05** Solicitante – Articulo, muchos a muchos (toma prestado), clase de asociación Prestamo |   |   |   |   | X |   |   | X | X | X | X | X | X | X |   |   |   | X |   | X | X |   | X | X | X |   |   | X |   |
+| **A06** Reserva – Prestamo (se convierte en) |   |   |   | X | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **A07** Tecnico – Prestamo (entrega) |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |
+| **A08** Tecnico – Prestamo (recoge) |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |
+| **A09** Articulo – Incidencia (afecta a) |   |   |   |   |   | X |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   | X | X |   |   |   |
+| **A10** Prestamo – Incidencia (se detecta en) |   |   |   |   |   | X |   |   |   |   |   |   |   | X |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |
+| **A11** Tecnico – Incidencia (registra) |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **A12** Solicitante – Penalizacion (recibe) |   |   |   |   |   |   | X |   |   | X | X |   |   | X |   | X |   |   |   |   |   | X |   |   |   |   | X |   |   |
+| **A13** Prestamo – Penalizacion (origina) |   |   |   |   |   |   | X |   |   |   | X |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |
+| **A14** Incidencia – Penalizacion (origina, composición) |   |   |   |   |   |   | X |   |   |   |   |   |   | X |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |
+| **A15** Tecnico – Penalizacion (levanta) |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 
 ## 7. Modelo relacional en 3FN
 
