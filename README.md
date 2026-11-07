@@ -578,20 +578,24 @@ class MotivoPenalizacion {
 
 #### Caso 1. Reserva de una cámara
 
-**Descripción.** El 1 de octubre de 2026, Paula Ramírez Soria, estudiante con UVUS PKN3387, reserva una cámara Canon EOS R50 para recogerla al día siguiente y devolverla el 4 de octubre. El modelo tiene dos artículos libres, CAM-005 y CAM-006, y el sistema asigna el CAM-005. La reserva se crea Pendiente y no cambia el estado del artículo.
+**Descripción.** El 1 de octubre de 2026, Paula Ramírez Soria, estudiante con UVUS PKN3387, reserva una cámara Canon EOS R50 para recogerla al día siguiente y devolverla el 4 de octubre. Poco después, Carlos Medina Soto (UVUS CMS4412) pide la misma cámara para recogerla también el 2 de octubre. El modelo tiene dos artículos, CAM-005 y CAM-006. El CAM-005 ya está comprometido con la reserva de Paula en ese periodo, así que el sistema no puede asignárselo a Carlos (R26) y le asigna el CAM-006. Si no hubiera quedado ningún artículo libre, la reserva de Carlos se habría rechazado. Las dos reservas se crean Pendientes y no cambian el estado de los artículos.
 
 ```mermaid
 classDiagram
 direction TB
-
 class pkn3387["pkn3387 : Estudiante"] {
   uvus = PKN3387
-  dni = 80564127A
   nombre = Paula
   apellidos = Ramírez Soria
   email = pramsor@alum.us.es
-  telefono = 685723460
-  fechaAlta = 2026-09-20
+  /penalizado = false
+  /numActivos = 1
+}
+class cms4412["cms4412 : Estudiante"] {
+  uvus = CMS4412
+  nombre = Carlos
+  apellidos = Medina Soto
+  email = cmedsot@alum.us.es
   /penalizado = false
   /numActivos = 1
 }
@@ -601,37 +605,34 @@ class r1["r1 : Reserva"] {
   fechaDevolucionPrevista = 2026-10-04 11:00
   estado = PENDIENTE
 }
+class r2["r2 : Reserva"] {
+  fechaCreacion = 2026-10-01 12:30
+  fechaRecogida = 2026-10-02 12:00
+  fechaDevolucionPrevista = 2026-10-04 12:00
+  estado = PENDIENTE
+}
 class cam005["cam005 : Articulo"] {
   codigoInventario = CAM-005
-  numeroSerie = 7659
-  fechaAdquisicion = 2025-07-15
-  precioCompra = 779.00
   ubicacion = Almacén
   estado = DISPONIBLE
 }
 class cam006["cam006 : Articulo"] {
   codigoInventario = CAM-006
-  numeroSerie = 7660
-  fechaAdquisicion = 2025-07-15
-  precioCompra = 779.00
   ubicacion = Almacén
   estado = DISPONIBLE
 }
 class r50["r50 : Modelo"] {
   marca = Canon
   nombreComercial = EOS R50
-  descripcion = Cámara mirrorless compacta para foto y vídeo
-  especificaciones = Montura RF, 24,2 MP, vídeo 4K
-  fotografia = canon-eos-r50.jpg
   /unidadesDisponibles = 2
 }
 class audiovisual["audiovisual : Categoria"] {
   nombre = Audiovisual
-  descripcion = Cámaras, proyectores y equipos de grabación
 }
-
 pkn3387 -- r1 : realiza
+cms4412 -- r2 : realiza
 r1 -- cam005 : se asigna a
+r2 -- cam006 : se asigna a
 cam005 -- r50 : agrupa
 cam006 -- r50 : agrupa
 r50 -- audiovisual : clasifica
@@ -639,31 +640,32 @@ r50 -- audiovisual : clasifica
 
 #### Caso 2. Recogida de la cámara y comienzo del préstamo
 
-**Descripción.** El 2 de octubre de 2026, Paula Ramírez Soria acude al mostrador a recoger la cámara que reservó el día anterior. El técnico Javier Gutierrez Asencio le entrega el CAM-005 y registra el préstamo: la reserva pasa a Recogida, se crea el préstamo con la fecha límite del 4 de octubre y el artículo pasa a Prestado.
+**Descripción.** El 2 de octubre de 2026, Paula Ramírez Soria acude al mostrador a recoger la cámara que reservó el día anterior. El técnico Javier Gutierrez Asencio le entrega el CAM-005 y registra el préstamo: la reserva pasa a Recogida, se crea el préstamo con la fecha límite del 4 de octubre y el artículo pasa a Prestado. Mientras tanto, la reserva de Carlos sigue Pendiente sobre el CAM-006, que continúa Disponible, y el CAM-005, ya Prestado, no puede asignarse a nadie más (R27, R36).
 
 ```mermaid
 classDiagram
 direction TB
-
 class pkn3387["pkn3387 : Estudiante"] {
   uvus = PKN3387
-  dni = 80564127A
   nombre = Paula
   apellidos = Ramírez Soria
   email = pramsor@alum.us.es
-  telefono = 685723460
-  fechaAlta = 2026-09-20
+  /penalizado = false
+  /numActivos = 1
+}
+class cms4412["cms4412 : Estudiante"] {
+  uvus = CMS4412
+  nombre = Carlos
+  apellidos = Medina Soto
+  email = cmedsot@alum.us.es
   /penalizado = false
   /numActivos = 1
 }
 class jpr3240["jpr3240 : Tecnico"] {
   uvus = JPR3240
-  dni = 65374419R
   nombre = Javier
   apellidos = Gutierrez Asencio
   email = jgutase@us.es
-  telefono = 662370204
-  fechaAlta = 2015-03-14
 }
 class r1["r1 : Reserva"] {
   fechaCreacion = 2026-10-01 10:15
@@ -671,48 +673,44 @@ class r1["r1 : Reserva"] {
   fechaDevolucionPrevista = 2026-10-04 11:00
   estado = RECOGIDA
 }
+class r2["r2 : Reserva"] {
+  fechaCreacion = 2026-10-01 12:30
+  fechaRecogida = 2026-10-02 12:00
+  fechaDevolucionPrevista = 2026-10-04 12:00
+  estado = PENDIENTE
+}
 class p1["p1 : Prestamo"] {
   fechaEntrega = 2026-10-02 11:05
   fechaLimite = 2026-10-04 11:00
   fechaDevolucion = null
-  estadoVuelta = null
   /diasRetraso = 0
 }
 class cam005["cam005 : Articulo"] {
   codigoInventario = CAM-005
-  numeroSerie = 7659
-  fechaAdquisicion = 2025-07-15
-  precioCompra = 779.00
   ubicacion = Almacén
   estado = PRESTADO
 }
 class cam006["cam006 : Articulo"] {
   codigoInventario = CAM-006
-  numeroSerie = 7660
-  fechaAdquisicion = 2025-07-15
-  precioCompra = 779.00
   ubicacion = Almacén
   estado = DISPONIBLE
 }
 class r50["r50 : Modelo"] {
   marca = Canon
   nombreComercial = EOS R50
-  descripcion = Cámara mirrorless compacta para foto y vídeo
-  especificaciones = Montura RF, 24,2 MP, vídeo 4K
-  fotografia = canon-eos-r50.jpg
   /unidadesDisponibles = 1
 }
 class audiovisual["audiovisual : Categoria"] {
   nombre = Audiovisual
-  descripcion = Cámaras, proyectores y equipos de grabación
 }
-
 pkn3387 -- r1 : realiza
-r1 -- cam005 : se asigna a
-r1 -- p1 : se convierte en
 pkn3387 -- p1 : toma prestado
-p1 -- cam005 : se presta en
 jpr3240 -- p1 : entrega
+r1 -- p1 : se convierte en
+r1 -- cam005 : se asigna a
+cms4412 -- r2 : realiza
+r2 -- cam006 : se asigna a
+p1 -- cam005 : se presta en
 cam005 -- r50 : agrupa
 cam006 -- r50 : agrupa
 r50 -- audiovisual : clasifica
@@ -720,31 +718,24 @@ r50 -- audiovisual : clasifica
 
 #### Caso 3. Devolución con daños de un proyector
 
-**Descripción.** El PDI Marta Aguilar Ramos (UVUS JAP2031) recogió el 8 de octubre de 2026 un proyector Epson EB-L210SW directamente en el mostrador, sin reserva previa, con fecha límite el 13 de octubre. Lo devuelve el 10 de octubre, antes de la fecha límite, y el técnico Javier Gutierrez Asencio comprueba que la óptica está dañada. Registra una incidencia de gravedad Grave, el proyector pasa a En reparación y el sistema crea una penalización de 30 días para el PDI.
+**Descripción.** El PDI Marta Aguilar Ramos (UVUS JAP2031) recogió el 8 de octubre de 2026 un proyector Epson EB-L210SW directamente en el mostrador, sin reserva previa, con fecha límite el 13 de octubre. Lo devuelve el 10 de octubre, antes de la fecha límite, y el técnico Javier Gutierrez Asencio comprueba que la óptica está dañada. Registra una incidencia de gravedad Grave, el proyector pasa a En reparación y el sistema crea una penalización de 30 días para el PDI. Con la penalización activa, el PDI intenta reservar el PRY-002, que está libre, y el sistema lo rechaza (R24, RN03): no puede reservar ni recoger material hasta el 9 de noviembre, aunque sí devolver lo que tenga prestado y consultar sus datos.
 
 ```mermaid
 classDiagram
 direction TB
-
 class jap2031["jap2031 : PDI"] {
   uvus = JAP2031
-  dni = 56367868C
   nombre = Marta
   apellidos = Aguilar Ramos
   email = aguilarramos@us.es
-  telefono = 623119981
-  fechaAlta = 2005-07-12
   /penalizado = true
   /numActivos = 0
 }
 class jpr3240["jpr3240 : Tecnico"] {
   uvus = JPR3240
-  dni = 65374419R
   nombre = Javier
   apellidos = Gutierrez Asencio
   email = jgutase@us.es
-  telefono = 662370204
-  fechaAlta = 2015-03-14
 }
 class p2["p2 : Prestamo"] {
   fechaEntrega = 2026-10-08 10:00
@@ -756,9 +747,7 @@ class p2["p2 : Prestamo"] {
 class i1["i1 : Incidencia"] {
   fecha = 2026-10-10 12:45
   descripcion = Óptica dañada
-  foto = null
   gravedad = GRAVE
-  costeEstimado = null
   estado = EN_REPARACION
 }
 class pen1["pen1 : Penalizacion"] {
@@ -769,39 +758,27 @@ class pen1["pen1 : Penalizacion"] {
 }
 class pry001["pry001 : Articulo"] {
   codigoInventario = PRY-001
-  numeroSerie = 5678-7761
-  fechaAdquisicion = 2022-04-15
-  precioCompra = 559.00
   ubicacion = Taller de reparación
   estado = EN_REPARACION
 }
 class pry002["pry002 : Articulo"] {
   codigoInventario = PRY-002
-  numeroSerie = 5678-7762
-  fechaAdquisicion = 2022-04-15
-  precioCompra = 559.00
   ubicacion = Almacén
   estado = DISPONIBLE
 }
 class l210["l210 : Modelo"] {
   marca = Epson
   nombreComercial = EB-L210SW
-  descripcion = Proyector láser de corta distancia con alta luminosidad
-  especificaciones = WXGA, 4.500 lúmenes, láser
-  fotografia = epson-eb-l210sw.jpg
   /unidadesDisponibles = 1
 }
 class audiovisual["audiovisual : Categoria"] {
   nombre = Audiovisual
-  descripcion = Cámaras, proyectores y equipos de grabación
 }
-
 jap2031 -- p2 : toma prestado
-p2 -- pry001 : se presta en
 jpr3240 -- p2 : entrega
-jpr3240 -- p2 : recoge
 jpr3240 -- i1 : registra
-i1 -- p2 : se detecta en
+p2 -- i1 : se detecta en
+p2 -- pry001 : se presta en
 i1 -- pry001 : afecta a
 i1 *-- pen1 : origina
 jap2031 -- pen1 : recibe
