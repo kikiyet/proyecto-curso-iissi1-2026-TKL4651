@@ -240,7 +240,7 @@ No se puede reservar con más de 14 días de antelación, para evitar que los eq
 
 #### RN09. Caducidad de reservas no recogidas
 
-Una reserva que no se recoge en las 2 horas siguientes a su hora de recogida pasa a Caducada, nunca llega a ser préstamo y el artículo queda libre para otros. Si un solicitante acumula 3 reservas caducadas en el mismo cuatrimestre, recibe una penalización de 7 días.
+Una reserva que no se recoge en las 2 horas siguientes a su hora de recogida pasa a Caducada, nunca llega a ser préstamo y el artículo queda libre para otros. Si un solicitante acumula 3 reservas caducadas en el mismo cuatrimestre, recibe una penalización de 7 días. El primer cuatrimestre va de septiembre a enero y el segundo, de febrero a agosto.
 
 **Prueba de aceptación**
 
@@ -450,7 +450,7 @@ note for Articulo "{ R7, R8: codigoInventario y numeroSerie únicos<br/>R9: fech
 note for Reserva "{ R11: fechaRecogida ≥ fechaCreacion<br/>R12: fechaDevolucionPrevista > fechaRecogida<br/>R13: al crearse, estado = PENDIENTE<br/>R14: estado = RECOGIDA si y solo si se tiene préstamo<br/>R23: fechaDevolucionPrevista - fechaRecogida no supera la duración máxima (ver Prestamo)<br/>R26: sin solapamiento con otra reserva pendiente o préstamo en curso del mismo artículo<br/>R30: fechaRecogida ≤ fechaCreacion + 14 días<br/>R31: PENDIENTE pasa a CADUCADA a las 2 h sin recoger, 3 caducadas en el cuatrimestre = 7 días de penalización<br/>R33: su préstamo es del mismo solicitante y del mismo artículo que la reserva }"
 note for Prestamo "{ Clase de asociación de Solicitante-Articulo (toma prestado)<br/>R15: fechaLimite > fechaEntrega<br/>R16: fechaDevolucion ≥ fechaEntrega<br/>R17: estadoVuelta y técnico que recoge solo si hay fechaDevolucion<br/>R23: duración máx. 3 días (Estudiante) y 7 (PDI), 24 h si el modelo es de Realidad Virtual<br/>R25: devuelto tarde = penalización RETRASO de 2 días por día de retraso (máx 60), si ya estaba penalizado empieza al terminar la anterior<br/>R28: al devolverse, el artículo pasa a EN_REVISION<br/>/diasRetraso = días (o fracción) entre fechaLimite y fechaDevolucion, o hoy si no se ha devuelto, 0 si no hay retraso }"
 note for Incidencia "{ R18: costeEstimado ≥ 0<br/>R19: fecha ≥ fechaEntrega del préstamo asociado<br/>R29: GRAVE = artículo EN_REPARACION + 30 días, PERDIDA = artículo DE_BAJA + 90 días<br/>R34: si tiene préstamo, es del mismo artículo }"
-note for Penalizacion "{ R20: fechaFin > fechaInicio<br/>R21: RETRASO solo a un préstamo, INCIDENCIA_GRAVE_O_PERDIDA solo a una incidencia, RESERVAS_NO_RECOGIDAS a ninguno de los dos<br/>R35: el sancionado es el solicitante del préstamo que la origina (directamente o a través de la incidencia)<br/>/activa = fechaFin > hoy y no ha sido levantada }"
+note for Penalizacion "{ R20: fechaFin > fechaInicio<br/>R21: RETRASO solo a un préstamo, INCIDENCIA_GRAVE_O_PERDIDA solo a una incidencia, RESERVAS_NO_RECOGIDAS a ninguno de los dos<br/>R35: el sancionado es el solicitante del préstamo que la origina (directamente o a través de la incidencia)<br/>/activa = fechaInicio ≤ hoy < fechaFin y no ha sido levantada }"
 Solicitante "0..*" -- "0..*" Articulo : toma prestado
 Usuario <|-- Solicitante
 Usuario <|-- Tecnico
@@ -519,7 +519,7 @@ class MotivoPenalizacion {
 
 **Reserva y Préstamo.** Son clases distintas porque representan momentos distintos: la reserva es un compromiso para recoger un artículo en el futuro y el préstamo es el periodo en que el solicitante tiene el artículo en su poder. Se relacionan con multiplicidad 0..1 en ambos extremos, porque una reserva puede cancelarse o caducar sin llegar a ser préstamo, y un préstamo puede hacerse en el mostrador sin reserva previa.
 
-**Asociación de muchos a muchos.** Un solicitante puede tomar prestados muchos artículos a lo largo del tiempo y un artículo puede prestarse a muchos solicitantes, por lo que Solicitante y Articulo se relacionan con multiplicidad 0..* en ambos extremos. Los datos de cada vez que se produce esa relación (fechas, técnicos que entregan y recogen, estado de vuelta) pertenecen a la asociación y no a ninguno de los dos extremos, así que se guardan en la clase de asociación Prestamo. Por eso en los diagramas de objetos cada préstamo se enlaza con su solicitante y con su artículo.
+**Asociación de muchos a muchos.** Un solicitante puede tomar prestados muchos artículos a lo largo del tiempo y un artículo puede prestarse a muchos solicitantes, por lo que Solicitante y Articulo se relacionan con multiplicidad 0..* en ambos extremos. Los datos de cada vez que se produce esa relación (fechas, técnicos que entregan y recogen, estado de vuelta) pertenecen a la asociación y no a ninguno de los dos extremos, así que se guardan en la clase de asociación Prestamo. Por eso en los diagramas de objetos cada préstamo se enlaza con su solicitante y con su artículo. Como un mismo solicitante puede tomar prestado el mismo artículo varias veces, puede haber varios préstamos para el mismo par solicitante-artículo; por eso, al pasar al modelo relacional, cada préstamo tiene su propio identificador (apartado 7).
 
 **Composición entre Incidencia y Penalizacion.** La penalización por incidencia grave o pérdida no tiene sentido sin la incidencia que la origina: nace al registrarla (R29) y desaparece si la incidencia se elimina. Por eso se modela como composición, con el rombo en Incidencia. La multiplicidad en el extremo del todo es 0..1 porque las penalizaciones por retraso y por reservas no recogidas existen sin incidencia (R21).
 
@@ -531,7 +531,7 @@ class MotivoPenalizacion {
 - **/numActivos (Solicitante):** número de reservas en estado PENDIENTE más número de préstamos sin fecha de devolución del solicitante.
 - **/unidadesDisponibles (Modelo):** número de artículos del modelo en estado DISPONIBLE.
 - **/diasRetraso (Prestamo):** días, contando cada fracción como un día completo, entre la fecha límite y la fecha de devolución o, si no se ha devuelto, la fecha actual. Vale 0 si no hay retraso.
-- **/activa (Penalizacion):** es verdadero si la fecha de fin es posterior a la fecha actual y la penalización no ha sido levantada por un técnico (es decir, no está enlazada con ningún técnico mediante «levanta»).
+- **/activa (Penalizacion):** es verdadero si la penalización ya ha empezado (fecha de inicio no posterior a la fecha actual), la fecha de fin es posterior a la fecha actual y la penalización no ha sido levantada por un técnico (es decir, no está enlazada con ningún técnico mediante «levanta»).
 
 #### 5.1.3. Restricciones
 
@@ -710,7 +710,7 @@ r1 -- p1 : se convierte en
 r1 -- cam005 : se asigna a
 cms4412 -- r2 : realiza
 r2 -- cam006 : se asigna a
-p1 -- cam005 : se presta en
+p1 -- cam005 : toma prestado
 cam005 -- r50 : agrupa
 cam006 -- r50 : agrupa
 r50 -- audiovisual : clasifica
@@ -776,9 +776,10 @@ class audiovisual["audiovisual : Categoria"] {
 }
 jap2031 -- p2 : toma prestado
 jpr3240 -- p2 : entrega
+jpr3240 -- p2 : recoge
 jpr3240 -- i1 : registra
 p2 -- i1 : se detecta en
-p2 -- pry001 : se presta en
+p2 -- pry001 : toma prestado
 i1 -- pry001 : afecta a
 i1 *-- pen1 : origina
 jap2031 -- pen1 : recibe
@@ -822,38 +823,246 @@ La matriz relaciona los elementos del modelo conceptual del apartado 5.1 con los
 | **A13** Prestamo – Penalizacion (origina) |   |   |   |   |   |   | X |   |   |   | X |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |
 | **A14** Incidencia – Penalizacion (origina, composición) |   |   |   |   |   |   | X |   |   |   |   |   |   | X |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |
 | **A15** Tecnico – Penalizacion (levanta) |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+---
+
 ## 7. Modelo relacional en 3FN
 
-- Relaciones obtenidas al aplicar la transformación del modelo conceptual.
+El modelo conceptual del apartado 5.1 se transforma en ocho relaciones: Usuarios, para toda la jerarquía de usuarios, y Categorias, Modelos, Articulos, Reservas, Prestamos, Incidencias y Penalizaciones, una para cada una de las demás clases. La implementación en MariaDB está en los scripts 1 a 5 del repositorio (apartado 8).
 
-### 7.1.  Justificación de la estrategia de transformación de jerarquías
+**Notación.** La clave primaria aparece <ins>subrayada</ins> y las claves ajenas, en *cursiva*. Debajo de cada relación se indica a qué tabla apunta cada clave ajena, las claves alternativas, los atributos que admiten nulos y los dominios de los atributos enumerados. Los demás atributos son obligatorios.
 
-- si se identificaron jerarquías en el MC.
+#### Reglas de transformación aplicadas
 
+**Clases.** Cada clase concreta da lugar a una relación con un identificador numérico como clave primaria. Las claves naturales del modelo (uvus, dni, código de inventario, número de serie, nombre de la categoría, marca y nombre comercial del modelo) se mantienen como claves alternativas, porque pueden cambiar o estar formadas por varios atributos.
 
-### 8. Matriz de trazabilidad MC/SQL (opcional):
+**Asociaciones uno a muchos.** Se representan con una clave ajena en la relación del extremo «muchos». Si la multiplicidad del otro extremo es 1, la clave ajena no admite nulos; si es 0..1, sí los admite. Así se transforman A01 a A04, A07 a A12 y A15.
 
-- Restricciones sobre el MC / Elementos del modelo tecnológico (SQL) (Triggers, checks, etc.)
-- Incluir Reglas de negocio — Constraints/Triggers en las matrices de trazabilidad para el entregable 3
+**Asociaciones 0..1 a 0..1.** Reserva–Prestamo (A06), Prestamo–Penalizacion (A13) e Incidencia–Penalizacion (A14) se representan con una clave ajena que admite nulos y que además es clave alternativa, para que cada reserva, préstamo o incidencia tenga como mucho un préstamo o una penalización. La clave ajena se coloca en la relación que se crea después: el préstamo se crea al recoger la reserva, y la penalización, al registrar el retraso o la incidencia.
 
-|       | EntidadX   | AsociaciónX  | RestricciónX  | Entidad2 ...   | 
-|:-------|:-------|:-------|:-------|:-------|
-| TABLA-1 |        |        |        |        |
-| TABLA-2 |        |        |        |        |
-| TABLA-3 |        |        |        |        |
-| TABLA-4 |        |        |        |        |
-| TRIG-1 |        |        |        |        |
-| TRIG-2 | X      | X      |        | X      |
-| TRIG-3 |        | X      |        | X      |
-| TRIG-4 |        |        | X      |        |
-| CONST-1 |        |        |        |        |
-| CONST-2 | X      | X      |        | X      |
-| CONST-3 |        | X      |        | X      |
-| CONST-4 |        |        | X      |        |
+**Clase de asociación Prestamo (A05).** La asociación muchos a muchos entre Solicitante y Articulo da lugar a la relación Prestamos, con una clave ajena hacia cada extremo y los atributos de la clase de asociación. Su clave primaria no es el par (solicitanteId, articuloId), porque un mismo solicitante puede tomar prestado el mismo artículo varias veces, sino un identificador propio, prestamoId.
 
-Se consideran todo tipo de constraints declarativas (aquellas definidas durante el CREATE TABLE).
+**Composición Incidencia–Penalizacion (A14).** La clave ajena de Penalizaciones hacia Incidencias borra en cascada (ON DELETE CASCADE): si se elimina una incidencia, se elimina la penalización que forma parte de ella. El resto de claves ajenas impiden borrar la fila referenciada (ON DELETE RESTRICT), para conservar el historial; en el caso de Modelos hacia Categorias, esto implementa además la restricción R32.
+
+**Multiplicidad mínima 1 de Modelo–Articulo (A02).** Una clave ajena no puede obligar a que un modelo tenga al menos un artículo. Por eso los modelos se dan de alta junto con su primer artículo en una única transacción (procedimiento `pAltaModelo`) y los artículos nunca se borran, sino que se dan de baja (trigger `tArticulosBD`), como indica el apartado 2.1.
+
+**Enumerados.** Cada enumerado del modelo se convierte en el dominio del atributo que lo usa (tipo `ENUM` de MariaDB).
+
+**Atributos derivados.** No se almacenan, porque guardarlos obligaría a mantenerlos actualizados y podrían contradecir los datos de los que dependen. Se calculan con funciones y vistas: `/penalizado` y `/numActivos` en la vista `vSolicitantes`, `/unidadesDisponibles` en `vModelos`, `/diasRetraso` en `vPrestamos` y `/activa` en `vPenalizaciones`.
+
+**Restricciones.** Las restricciones R1 a R38 se implementan con restricciones declarativas cuando afectan a una sola fila (`UNIQUE`, `CHECK`, `FOREIGN KEY`) y con triggers cuando necesitan consultar otras filas o tablas, o la fecha actual. La matriz del apartado 8 indica qué elemento implementa cada una.
+
+#### Relaciones
+
+**Usuarios**(<ins>usuarioId</ins>, uvus, dni, nombre, apellidos, email, telefono, fechaAlta, tipo)
+
+- Claves alternativas: {uvus}, {dni}.
+- Admite nulos: telefono.
+- Dominio de tipo: {ESTUDIANTE, PDI, TECNICO}.
+
+**Categorias**(<ins>categoriaId</ins>, nombre, descripcion)
+
+- Clave alternativa: {nombre}.
+
+**Modelos**(<ins>modeloId</ins>, *categoriaId*, marca, nombreComercial, descripcion, especificaciones, fotografia)
+
+- Clave ajena: categoriaId → Categorias.
+- Clave alternativa: {marca, nombreComercial}.
+
+**Articulos**(<ins>articuloId</ins>, *modeloId*, codigoInventario, numeroSerie, fechaAdquisicion, precioCompra, ubicacion, estado)
+
+- Clave ajena: modeloId → Modelos.
+- Claves alternativas: {codigoInventario}, {numeroSerie}.
+- Dominio de estado: {DISPONIBLE, PRESTADO, EN_REVISION, EN_REPARACION, DE_BAJA}.
+
+**Reservas**(<ins>reservaId</ins>, *solicitanteId*, *articuloId*, fechaCreacion, fechaRecogida, fechaDevolucionPrevista, estado)
+
+- Claves ajenas: solicitanteId → Usuarios (debe ser un estudiante o un PDI); articuloId → Articulos.
+- Dominio de estado: {PENDIENTE, RECOGIDA, CANCELADA, CADUCADA}.
+
+**Prestamos**(<ins>prestamoId</ins>, *solicitanteId*, *articuloId*, *reservaId*, *tecnicoEntregaId*, *tecnicoRecogeId*, fechaEntrega, fechaLimite, fechaDevolucion, estadoVuelta)
+
+- Claves ajenas: solicitanteId → Usuarios (debe ser un estudiante o un PDI); articuloId → Articulos; reservaId → Reservas; tecnicoEntregaId → Usuarios (debe ser un técnico); tecnicoRecogeId → Usuarios (debe ser un técnico).
+- Clave alternativa: {reservaId}.
+- Admiten nulos: reservaId, tecnicoRecogeId, fechaDevolucion, estadoVuelta.
+- Dominio de estadoVuelta: {CORRECTO, CON_DAÑOS}.
+
+**Incidencias**(<ins>incidenciaId</ins>, *articuloId*, *prestamoId*, *tecnicoId*, fecha, descripcion, foto, gravedad, costeEstimado, estado)
+
+- Claves ajenas: articuloId → Articulos; prestamoId → Prestamos; tecnicoId → Usuarios (debe ser un técnico).
+- Admiten nulos: prestamoId, foto, costeEstimado.
+- Dominio de gravedad: {LEVE, GRAVE, PERDIDA}.
+- Dominio de estado: {ABIERTA, EN_REPARACION, RESUELTA, BAJA_DEFINITIVA}.
+
+**Penalizaciones**(<ins>penalizacionId</ins>, *solicitanteId*, *prestamoId*, *incidenciaId*, *tecnicoLevantaId*, motivo, fechaInicio, fechaFin)
+
+- Claves ajenas: solicitanteId → Usuarios (debe ser un estudiante o un PDI); prestamoId → Prestamos; incidenciaId → Incidencias, con borrado en cascada; tecnicoLevantaId → Usuarios (debe ser un técnico).
+- Claves alternativas: {prestamoId}, {incidenciaId}.
+- Admiten nulos: prestamoId, incidenciaId, tecnicoLevantaId.
+- Dominio de motivo: {RETRASO, INCIDENCIA_GRAVE_O_PERDIDA, RESERVAS_NO_RECOGIDAS}.
+
+#### Comprobación de la tercera forma normal
+
+Todas las relaciones están en tercera forma normal.
+
+**Primera forma normal.** Todos los atributos son atómicos: no hay listas ni grupos repetidos. Por ejemplo, los artículos de un modelo no se guardan como una lista dentro de Modelos, sino como filas de Articulos que apuntan a su modelo.
+
+**Segunda forma normal.** Todas las claves candidatas son de un solo atributo, salvo {marca, nombreComercial} de Modelos, y en esa relación ningún atributo depende solo de la marca o solo del nombre comercial. Por tanto, ningún atributo depende de una parte de una clave.
+
+**Tercera forma normal.** En cada relación, los únicos determinantes son sus claves candidatas: todos los atributos dependen de la clave, y no de otro atributo que no sea clave. Por eso los datos de cada concepto se guardan una sola vez:
+
+- Articulos no guarda la marca ni la categoría del artículo, porque dependen del modelo; se obtienen a través de modeloId.
+- Prestamos no guarda el nombre del solicitante ni el código del artículo, porque dependen de solicitanteId y de articuloId.
+- En Usuarios, dni → nombre no viola la tercera forma normal, porque dni es clave alternativa.
+
+Hay tres casos en los que un dato se puede obtener por dos caminos, porque el modelo conceptual tiene dos asociaciones que llegan a la misma clase. Penalizaciones guarda su solicitante aunque, si viene de un préstamo, también se puede obtener a través de él; Incidencias guarda su artículo aunque también se puede obtener a través de su préstamo; y Prestamos guarda su solicitante y su artículo aunque, si viene de una reserva, también están en ella. Ninguno viola la tercera forma normal, que se comprueba dentro de cada relación, y todos son necesarios, porque la otra asociación es opcional: hay penalizaciones por reservas no recogidas sin préstamo, incidencias detectadas en una revisión sin préstamo y préstamos hechos en el mostrador sin reserva. Para que los dos caminos no se contradigan, los triggers comprueban que coinciden (restricciones R35, R34 y R33).
+
+### 7.1. Justificación de la estrategia de transformación de jerarquías
+
+El modelo tiene dos generalizaciones completas y disjuntas: Usuario (abstracta) se especializa en Solicitante (abstracta) y Tecnico, y Solicitante se especializa en Estudiante y PDI. Se ha elegido representar toda la jerarquía en **una única relación, Usuarios**, con un atributo discriminador, tipo, que solo toma los valores de las clases hoja: ESTUDIANTE, PDI o TECNICO.
+
+Los motivos son los siguientes:
+
+- **Las subclases no tienen atributos propios.** Lo que distingue a un estudiante de un PDI son sus límites de préstamo (RN01 y RN02), que dependen solo del tipo. Por eso la tabla única no tiene columnas que se queden vacías para algún tipo de usuario, y separar las subclases en tablas propias no aportaría ningún atributo.
+- **Las restricciones de la jerarquía se cumplen con el propio atributo.** Como tipo es obligatorio, todo usuario es de algún tipo (completa); como tiene un único valor, no puede ser de dos a la vez (disjunta). Y como solo admite valores de clases hoja, no puede haber usuarios que sean solo Usuario o solo Solicitante (clases abstractas).
+- **Las claves alternativas se comprueban de forma declarativa.** El uvus y el dni deben ser únicos entre todos los usuarios (R1 y R2). Con una tabla por subclase, la unicidad habría que comprobarla entre tres tablas, lo que no se puede hacer con `UNIQUE`.
+- **Las asociaciones con Solicitante tienen una única clave ajena.** Reservas, Prestamos y Penalizaciones apuntan a «un solicitante», que puede ser estudiante o PDI. Con una tabla por subclase, cada una de esas claves ajenas tendría que apuntar a dos tablas a la vez, lo que no es posible.
+
+Las otras dos estrategias se han descartado por esos motivos. Una tabla por cada subclase (Estudiantes, PDI y Tecnicos) repite los atributos comunes e impide las claves ajenas hacia Solicitante. Una tabla por cada clase (Usuarios, Solicitantes, Estudiantes, PDI y Tecnicos) crea cinco tablas, tres de ellas con solo la clave, y obliga a comprobar con triggers que cada usuario está en una sola subclase.
+
+La estrategia elegida tiene un coste: una clave ajena hacia Usuarios no garantiza por sí sola que el usuario sea del tipo correcto (por ejemplo, que quien realiza una reserva no sea un técnico). Por eso los procedimientos `pComprobarSolicitante` y `pComprobarTecnico` comprueban el tipo, y los triggers los llaman al insertar o modificar filas de Reservas, Prestamos, Incidencias y Penalizaciones.
+
+---
+
+## 8. Matriz de trazabilidad MC/SQL
+
+Las matrices relacionan los elementos del modelo conceptual (clases, asociaciones A01 a A15 del apartado 6, restricciones R1 a R38 del apartado 5.1.3 y atributos derivados) con los elementos SQL que los implementan. Cada elemento SQL se identifica con un código (TABLA, CONST, TRIG, PROC, FUNC, VISTA o EVT) y con su nombre en los scripts del repositorio:
+
+1. [`1.scripts_tablas_restricciones.sql`](1.scripts_tablas_restricciones.sql): las ocho tablas con sus restricciones declarativas (CONST).
+2. [`2.scripts_funciones_procedimientos.sql`](2.scripts_funciones_procedimientos.sql): seis funciones (FUNC-01 a FUNC-06) y nueve procedimientos (PROC-01 a PROC-09), cada uno con el comando para llamarlo; el evento de caducidad de reservas (EVT-01) y las vistas con los atributos derivados (VISTA-01 a VISTA-04).
+3. [`3.scripts_cursores_consultas.sql`](3.scripts_cursores_consultas.sql): una consulta por cada requisito funcional (RF01 a RF13), con JOIN, GROUP BY, HAVING, ORDER BY, SUM, COUNT, MAX, MIN y AVG. No incluye cursores.
+4. [`4.scripts_triggers.sql`](4.scripts_triggers.sql): quince triggers (TRIG-01 a TRIG-15). Encima de cada uno se indica la regla de negocio que implementa y debajo está el código que demuestra que funciona, dentro de un procedimiento (`pDemoTrig01` a `pDemoTrig15`) que se ejecuta después de cargar los datos.
+5. [`5.script_poblado_tablas.sql`](5.script_poblado_tablas.sql): los procedimientos para insertar datos (PROC-10 a PROC-12) y los datos de ejemplo, con al menos tres filas en cada tabla. Incluyen los escenarios del apartado 5.2.
+
+Los scripts se ejecutan en MariaDB (por ejemplo, desde HeidiSQL) en este orden: 1, 2, 4 y 5. Después se pueden ejecutar las consultas del script 3 y las demostraciones de los triggers (`CALL pDemoTrig01();` … `CALL pDemoTrig15();`). Los datos se insertan después de crear los triggers, en orden cronológico, para que sean los propios triggers los que calculen los estados y las penalizaciones. Sus fechas son relativas al momento de la carga, así que las consultas y las demostraciones conviene ejecutarlas en las horas siguientes. Para que las reservas caduquen solas hay que activar el planificador de eventos con `SET GLOBAL event_scheduler = ON;`.
+
+Se marca una **X** cuando el elemento SQL implementa el elemento del modelo. Para que la matriz se pueda leer, se divide en cuatro partes según el tipo de elemento del modelo. Todas las clases, asociaciones, restricciones y atributos derivados tienen al menos una X. Los procedimientos `pProbar`, `pVariablesDemo` y `pDemoTrig01` a `pDemoTrig15` no aparecen porque solo sirven para las demostraciones de los triggers.
+
+Las restricciones que solo afectan a una fila se implementan como constraints declarativas en el CREATE TABLE (apartado 8.2); las que consultan otras filas, otras tablas o la fecha actual, con triggers, procedimientos y funciones (apartado 8.3). Los triggers que se ejecutan antes de modificar una fila (TRIG-04, TRIG-08, TRIG-12 y TRIG-14) impiden además cambiar los datos ya comprobados al insertarla, para que esas comprobaciones no puedan saltarse con un UPDATE.
+
+### 8.1. Clases y asociaciones implementadas en tablas
+
+Los procedimientos PROC-01 y PROC-02 comprueban que los extremos de las asociaciones sean un solicitante o un técnico, ya que la jerarquía está en una sola tabla (apartado 7.1). PROC-11 y TRIG-15 garantizan que todo modelo tenga al menos un artículo (A02). El resto de procedimientos son las operaciones con las que se crean o modifican las filas de cada clase y asociación.
+
+| Elemento SQL | Usuario | Solicitante | Estudiante | PDI | Tecnico | Categoria | Modelo | Articulo | Reserva | Prestamo | Incidencia | Penalizacion | A01 | A02 | A03 | A04 | A05 | A06 | A07 | A08 | A09 | A10 | A11 | A12 | A13 | A14 | A15 |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **TABLA-01** `Usuarios` | X | X | X | X | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **TABLA-02** `Categorias` |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **TABLA-03** `Modelos` |   |   |   |   |   |   | X |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **TABLA-04** `Articulos` |   |   |   |   |   |   |   | X |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **TABLA-05** `Reservas` |   |   |   |   |   |   |   |   | X |   |   |   |   |   | X | X |   |   |   |   |   |   |   |   |   |   |   |
+| **TABLA-06** `Prestamos` |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   | X | X | X | X |   |   |   |   |   |   |   |
+| **TABLA-07** `Incidencias` |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   | X | X | X |   |   |   |   |
+| **TABLA-08** `Penalizaciones` |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   | X | X | X | X |
+| **PROC-01** `pComprobarSolicitante` |   | X |   |   |   |   |   |   |   |   |   |   |   |   | X |   | X |   |   |   |   |   |   | X |   |   |   |
+| **PROC-02** `pComprobarTecnico` |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   | X | X |   |   | X |   |   |   | X |
+| **PROC-04** `pRecogerReserva` |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   | X | X | X |   |   |   |   |   |   |   |   |
+| **PROC-05** `pRegistrarDevolucion` |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |
+| **PROC-06** `pRevisarArticulo` |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **PROC-07** `pCancelarReserva` |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **PROC-08** `pLevantarPenalizacion` |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |
+| **PROC-10** `pInsertarUsuario` | X | X | X | X | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **PROC-11** `pAltaModelo` |   |   |   |   |   |   | X | X |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **PROC-12** `pInsertarArticulo` |   |   |   |   |   |   |   | X |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **TRIG-15** `tArticulosBD` |   |   |   |   |   |   |   | X |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |
+
+### 8.2. Constraints declarativas
+
+Columnas: asociaciones implementadas con claves ajenas y restricciones implementadas con `UNIQUE`, `CHECK` o `ON DELETE RESTRICT`.
+
+| Elemento SQL | A01 | A02 | A03 | A04 | A05 | A06 | A07 | A08 | A09 | A10 | A11 | A12 | A13 | A14 | A15 | R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R10 | R11 | R12 | R15 | R16 | R17 | R18 | R20 | R30 | R32 |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **CONST-01** `uq_usuarios_uvus` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-02** `uq_usuarios_dni` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-03** `ck_usuarios_dni` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-04** `ck_usuarios_email` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-05** `uq_categorias_nombre` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-06** `uq_modelos_marca_nombre` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-07** `fk_modelos_categoria` | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |
+| **CONST-08** `uq_articulos_codigo` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-09** `uq_articulos_serie` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |
+| **CONST-10** `ck_articulos_precio` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |
+| **CONST-11** `fk_articulos_modelo` |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-12** `ck_reservas_recogida` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |
+| **CONST-13** `ck_reservas_devolucion` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |
+| **CONST-14** `ck_reservas_antelacion` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |
+| **CONST-15** `fk_reservas_solicitante` |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-16** `fk_reservas_articulo` |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-17** `ck_prestamos_limite` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |
+| **CONST-18** `ck_prestamos_devolucion` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |
+| **CONST-19** `ck_prestamos_cierre` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |
+| **CONST-20** `fk_prestamos_solicitante` |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-21** `fk_prestamos_articulo` |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-22** `fk_prestamos_reserva` |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-23** `uq_prestamos_reserva` |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-24** `fk_prestamos_tecnico_entrega` |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-25** `fk_prestamos_tecnico_recoge` |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-26** `ck_incidencias_coste` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |
+| **CONST-27** `fk_incidencias_articulo` |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-28** `fk_incidencias_prestamo` |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-29** `fk_incidencias_tecnico` |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-30** `ck_penalizaciones_fechas` |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |
+| **CONST-31** `fk_penalizaciones_solicitante` |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-32** `fk_penalizaciones_prestamo` |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-33** `uq_penalizaciones_prestamo` |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-34** `fk_penalizaciones_incidencia` |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-35** `uq_penalizaciones_incidencia` |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **CONST-36** `fk_penalizaciones_tecnico` |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+
+### 8.3. Triggers, procedimientos, funciones y evento
+
+Columnas: restricciones que necesitan consultar otras filas, otras tablas o la fecha actual. Las funciones calculan valores que usan los triggers.
+
+| Elemento SQL | R9 | R13 | R14 | R17 | R19 | R21 | R22 | R23 | R24 | R25 | R26 | R27 | R28 | R29 | R31 | R33 | R34 | R35 | R36 | R37 | R38 |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **TRIG-01** `tArticulosBI` | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |
+| **TRIG-02** `tArticulosBU` | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   | X |
+| **TRIG-03** `tReservasBI` |   | X |   |   |   |   | X | X | X |   | X | X |   |   |   |   |   |   |   |   |   |
+| **TRIG-04** `tReservasBU` |   |   | X |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |
+| **TRIG-05** `tReservasAU` |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |
+| **TRIG-06** `tPrestamosBI` |   |   | X |   |   |   | X | X | X |   | X | X |   |   | X | X |   |   | X |   |   |
+| **TRIG-07** `tPrestamosAI` |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |
+| **TRIG-08** `tPrestamosBU` |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **TRIG-09** `tPrestamosAU` |   |   |   |   |   |   |   |   |   | X |   |   | X |   |   |   |   |   |   |   |   |
+| **TRIG-10** `tIncidenciasBI` |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |
+| **TRIG-11** `tIncidenciasAI` |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |
+| **TRIG-12** `tIncidenciasBU` |   |   |   |   | X |   |   |   |   |   |   |   |   | X |   |   | X |   |   |   |   |
+| **TRIG-13** `tPenalizacionesBI` |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |
+| **TRIG-14** `tPenalizacionesBU` |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |
+| **PROC-03** `pCaducarReservas` |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |
+| **PROC-04** `pRecogerReserva` |   |   | X |   |   |   |   | X |   |   |   |   |   |   |   | X |   |   |   |   |   |
+| **PROC-05** `pRegistrarDevolucion` |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **EVT-01** `eCaducarReservas` |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |
+| **FUNC-01** `fNumActivos` |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **FUNC-02** `fPenalizadoEn` |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |
+| **FUNC-03** `fDuracionMaxima` |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| **FUNC-04** `fDiasRetraso` |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |   |   |   |   |   |
+| **FUNC-05** `fCuatrimestre` |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |   |   |   |   |   |   |
+
+### 8.4. Atributos derivados
+
+Los atributos derivados no se almacenan; se calculan con funciones y se consultan mediante vistas.
+
+| Elemento SQL | /penalizado | /numActivos | /unidadesDisponibles | /diasRetraso | /activa |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **FUNC-01** `fNumActivos` |   | X |   |   |   |
+| **FUNC-02** `fPenalizadoEn` | X |   |   |   |   |
+| **FUNC-04** `fDiasRetraso` |   |   |   | X |   |
+| **FUNC-06** `fUnidadesDisponibles` |   |   | X |   |   |
+| **VISTA-01** `vSolicitantes` | X | X |   |   |   |
+| **VISTA-02** `vModelos` |   |   | X |   |   |
+| **VISTA-03** `vPrestamos` |   |   |   | X |   |
+| **VISTA-04** `vPenalizaciones` |   |   |   |   | X |
+
 -- fin entregable 3 --
 
 ## Referencias
-
-
