@@ -1,10 +1,10 @@
 -- =============================================================================
--- EquipaUS · Entregable 3 · 01_tablas.sql
+-- EquipaUS · Entregable 3 · 1.scripts_tablas_restricciones.sql
 -- Creación de las tablas con sus restricciones declarativas (PRIMARY KEY,
 -- UNIQUE, CHECK y FOREIGN KEY).
--- SGBD: MariaDB 10.5 o superior. Los scripts se ejecutan en orden:
---   01_tablas -> 02_funciones -> 03_procedimientos -> 04_vistas ->
---   05_datos -> 06_triggers -> 07_consultas
+-- SGBD: MariaDB 10.5 o superior. Orden de ejecución:
+--   1 (tablas) -> 2 (funciones y procedimientos) -> 4 (triggers) ->
+--   5 (poblado) -> 3 (consultas) -> demostraciones de los triggers del script 4
 -- =============================================================================
 
 SET NAMES utf8mb4;
@@ -30,6 +30,22 @@ DROP PROCEDURE IF EXISTS pProbar;
 DROP PROCEDURE IF EXISTS pInsertarUsuario;
 DROP PROCEDURE IF EXISTS pAltaModelo;
 DROP PROCEDURE IF EXISTS pInsertarArticulo;
+DROP PROCEDURE IF EXISTS pVariablesDemo;
+DROP PROCEDURE IF EXISTS pDemoTrig01;
+DROP PROCEDURE IF EXISTS pDemoTrig02;
+DROP PROCEDURE IF EXISTS pDemoTrig03;
+DROP PROCEDURE IF EXISTS pDemoTrig04;
+DROP PROCEDURE IF EXISTS pDemoTrig05;
+DROP PROCEDURE IF EXISTS pDemoTrig06;
+DROP PROCEDURE IF EXISTS pDemoTrig07;
+DROP PROCEDURE IF EXISTS pDemoTrig08;
+DROP PROCEDURE IF EXISTS pDemoTrig09;
+DROP PROCEDURE IF EXISTS pDemoTrig10;
+DROP PROCEDURE IF EXISTS pDemoTrig11;
+DROP PROCEDURE IF EXISTS pDemoTrig12;
+DROP PROCEDURE IF EXISTS pDemoTrig13;
+DROP PROCEDURE IF EXISTS pDemoTrig14;
+DROP PROCEDURE IF EXISTS pDemoTrig15;
 DROP VIEW      IF EXISTS vSolicitantes;
 DROP VIEW      IF EXISTS vModelos;
 DROP VIEW      IF EXISTS vPrestamos;
