@@ -1,3 +1,4 @@
+
 -- =============================================================================
 -- EquipaUS · Entregable 3 · 3.scripts_cursores_consultas.sql
 -- Una consulta por cada requisito funcional (RF01 a RF13, apartado 4.4).
