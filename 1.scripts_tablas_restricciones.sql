@@ -80,7 +80,7 @@ CREATE TABLE Usuarios (
   telefono   VARCHAR(15)  NULL,
   fechaAlta  DATE         NOT NULL,
   tipo       ENUM('ESTUDIANTE', 'PDI', 'TECNICO') NOT NULL,
-  CONSTRAINT pk_usuarios        PRIMARY KEY (usuarioId),
+  PRIMARY KEY (usuarioId),
   CONSTRAINT uq_usuarios_uvus   UNIQUE (uvus),                                   -- R1
   CONSTRAINT uq_usuarios_dni    UNIQUE (dni),                                    -- R2
   CONSTRAINT ck_usuarios_dni    CHECK (dni REGEXP '^([0-9]{8}|[XYZ][0-9]{7})[A-Z]$'),  -- R3
@@ -96,7 +96,7 @@ CREATE TABLE Categorias (
   categoriaId  INT          NOT NULL AUTO_INCREMENT,
   nombre       VARCHAR(60)  NOT NULL,
   descripcion  VARCHAR(500) NOT NULL,
-  CONSTRAINT pk_categorias         PRIMARY KEY (categoriaId),
+  PRIMARY KEY (categoriaId),
   CONSTRAINT uq_categorias_nombre  UNIQUE (nombre)                               -- R5
 ) ENGINE = InnoDB;
 
@@ -111,7 +111,7 @@ CREATE TABLE Modelos (
   descripcion       VARCHAR(1000) NOT NULL,
   especificaciones  VARCHAR(2000) NOT NULL,
   fotografia        VARCHAR(255)  NOT NULL,
-  CONSTRAINT pk_modelos              PRIMARY KEY (modeloId),
+  PRIMARY KEY (modeloId),
   CONSTRAINT uq_modelos_marca_nombre UNIQUE (marca, nombreComercial),           -- R6
   CONSTRAINT fk_modelos_categoria    FOREIGN KEY (categoriaId)                  -- A01, R32
     REFERENCES Categorias (categoriaId) ON DELETE RESTRICT
@@ -130,7 +130,7 @@ CREATE TABLE Articulos (
   ubicacion         VARCHAR(100)  NOT NULL,
   estado            ENUM('DISPONIBLE', 'PRESTADO', 'EN_REVISION', 'EN_REPARACION', 'DE_BAJA')
                     NOT NULL DEFAULT 'DISPONIBLE',
-  CONSTRAINT pk_articulos         PRIMARY KEY (articuloId),
+  PRIMARY KEY (articuloId),
   CONSTRAINT uq_articulos_codigo  UNIQUE (codigoInventario),                     -- R7
   CONSTRAINT uq_articulos_serie   UNIQUE (numeroSerie),                          -- R8
   CONSTRAINT ck_articulos_precio  CHECK (precioCompra > 0),                      -- R10
@@ -150,7 +150,7 @@ CREATE TABLE Reservas (
   fechaDevolucionPrevista  DATETIME NOT NULL,
   estado                   ENUM('PENDIENTE', 'RECOGIDA', 'CANCELADA', 'CADUCADA')
                            NOT NULL DEFAULT 'PENDIENTE',
-  CONSTRAINT pk_reservas             PRIMARY KEY (reservaId),
+  PRIMARY KEY (reservaId),
   CONSTRAINT ck_reservas_recogida    CHECK (fechaRecogida >= fechaCreacion),               -- R11
   CONSTRAINT ck_reservas_devolucion  CHECK (fechaDevolucionPrevista > fechaRecogida),      -- R12
   CONSTRAINT ck_reservas_antelacion  CHECK (fechaRecogida <= fechaCreacion + INTERVAL 14 DAY), -- R30
@@ -176,7 +176,7 @@ CREATE TABLE Prestamos (
   fechaLimite       DATETIME NOT NULL,
   fechaDevolucion   DATETIME NULL,
   estadoVuelta      ENUM('CORRECTO', 'CON_DAÑOS') NULL,
-  CONSTRAINT pk_prestamos              PRIMARY KEY (prestamoId),
+  PRIMARY KEY (prestamoId),
   CONSTRAINT uq_prestamos_reserva      UNIQUE (reservaId),                       -- A06 (0..1)
   CONSTRAINT ck_prestamos_limite       CHECK (fechaLimite > fechaEntrega),       -- R15
   CONSTRAINT ck_prestamos_devolucion   CHECK (fechaDevolucion IS NULL            -- R16
@@ -211,7 +211,7 @@ CREATE TABLE Incidencias (
   costeEstimado  DECIMAL(10,2) NULL,
   estado         ENUM('ABIERTA', 'EN_REPARACION', 'RESUELTA', 'BAJA_DEFINITIVA')
                  NOT NULL DEFAULT 'ABIERTA',
-  CONSTRAINT pk_incidencias           PRIMARY KEY (incidenciaId),
+  PRIMARY KEY (incidenciaId),
   CONSTRAINT ck_incidencias_coste     CHECK (costeEstimado IS NULL OR costeEstimado >= 0), -- R18
   CONSTRAINT fk_incidencias_articulo  FOREIGN KEY (articuloId)                  -- A09
     REFERENCES Articulos (articuloId) ON DELETE RESTRICT,
@@ -235,7 +235,7 @@ CREATE TABLE Penalizaciones (
   motivo            ENUM('RETRASO', 'INCIDENCIA_GRAVE_O_PERDIDA', 'RESERVAS_NO_RECOGIDAS') NOT NULL,
   fechaInicio       DATE NOT NULL,
   fechaFin          DATE NOT NULL,
-  CONSTRAINT pk_penalizaciones             PRIMARY KEY (penalizacionId),
+  PRIMARY KEY (penalizacionId),
   CONSTRAINT uq_penalizaciones_prestamo    UNIQUE (prestamoId),                  -- A13 (0..1)
   CONSTRAINT uq_penalizaciones_incidencia  UNIQUE (incidenciaId),                -- A14 (0..1)
   CONSTRAINT ck_penalizaciones_fechas      CHECK (fechaFin > fechaInicio),       -- R20
