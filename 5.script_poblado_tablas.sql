@@ -1,3 +1,4 @@
+
 -- =============================================================================
 -- EquipaUS · Entregable 3 · 5.script_poblado_tablas.sql
 -- Procedimientos para insertar datos y datos de ejemplo (al menos 3 filas en
